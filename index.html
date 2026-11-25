@@ -1,0 +1,862 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Solar PRO">
+<meta name="theme-color" content="#0a1320">
+<title>SOLAR CONTROL PRO LIVE</title>
+
+<style>
+
+:root {
+  color-scheme: dark;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #0a1320;
+  color: #edf5ff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+main {
+  max-width: 540px;
+  margin: auto;
+  padding: 18px;
+  display: grid;
+  gap: 12px;
+}
+
+header, .row, .weather {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+h1 {
+  font-size: 25px;
+  margin: 5px 0;
+}
+
+em {
+  color: #38bdf8;
+  font-style: normal;
+}
+
+small {
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: #a3b7cc;
+  font-weight: 650;
+}
+
+section {
+  background: linear-gradient(145deg,#16263a,#101d2e);
+  border: 1px solid #263b51;
+  border-radius: 20px;
+  padding: 16px;
+}
+
+button {
+  border: 1px solid #36536c;
+  background: #1c344a;
+  color: #d8edff;
+  border-radius: 12px;
+  padding: 10px;
+  cursor: pointer;
+}
+
+#refresh {
+  font-size: 25px;
+  padding: 5px 14px;
+}
+
+#notice, footer, p {
+  font-size: 12px;
+  color: #a3b7cc;
+}
+
+.big {
+  font-size: 48px;
+  font-weight: 750;
+  letter-spacing: -2px;
+  color: #ffbd59;
+  line-height: 1.1;
+}
+
+.big small {
+  font-size: 15px;
+  letter-spacing: 0;
+}
+
+.weather {
+  margin-bottom: 16px;
+}
+
+.weather strong {
+  font-size: 28px;
+}
+
+#weatherIcon {
+  display: inline-block;
+  font-size: 28px;
+  animation: floating 4s ease-in-out infinite;
+}
+
+@keyframes floating {
+  0%,100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+svg {
+  display: block;
+  width: 100%;
+  max-height: 240px;
+}
+
+.ray {
+  animation: fall var(--speed,2s) linear infinite;
+  stroke: #ffbd59;
+  stroke-width: 3;
+  fill: none;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 3px #ffb84d);
+}
+
+@keyframes fall {
+  0% {
+    transform: translateY(-25px);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(95px);
+    opacity: 0;
+  }
+}
+
+.paused .ray {
+  animation-play-state: paused;
+}
+
+@media(prefers-reduced-motion: reduce) {
+  .ray, #weatherIcon {
+    animation: none;
+  }
+}
+
+.track {
+  height: 10px;
+  background: #293b50;
+  border-radius: 8px;
+  position: relative;
+  margin: 14px 0 8px;
+}
+
+#fill {
+  height: 100%;
+  border-radius: 8px;
+  background: #ffbd59;
+  width: 0;
+  transition: width 1s;
+}
+
+.track i {
+  position: absolute;
+  left: 83.333%;
+  top: -4px;
+  height: 18px;
+  border-left: 2px solid white;
+}
+
+#chart {
+  height: 90px;
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  margin: 12px 0 5px;
+  background: repeating-linear-gradient(
+    to top,
+    transparent 0 29px,
+    #263b51 29px 30px
+  );
+}
+
+.bar {
+  flex: 1;
+  background: #ffbd59;
+  border-radius: 3px 3px 0 0;
+  min-width: 0;
+}
+
+.future {
+  background: #79613c;
+}
+
+.current {
+  outline: 1px solid #38bdf8;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 6px;
+}
+
+.cards div {
+  background: #0d1928;
+  border-radius: 12px;
+  padding: 12px 3px;
+  text-align: center;
+}
+
+.cards small {
+  font-size: 9px;
+  letter-spacing: .3px;
+}
+
+.cards b {
+  display: block;
+  font-size: 21px;
+  margin-top: 7px;
+}
+
+h2 {
+  font-size: 17px;
+  color: #ffbd59;
+  margin: 8px 0 12px;
+}
+
+footer {
+  display: grid;
+  gap: 10px;
+  padding: 4px;
+  text-align: center;
+}
+
+.live {
+  color: #34d399;
+  font-size: 10px;
+  letter-spacing: 2px;
+  font-weight: bold;
+}
+
+.dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  background: #34d399;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  50% {
+    box-shadow: 0 0 10px #34d399;
+    opacity: .5;
+  }
+}
+
+</style>
+</head>
+
+<body>
+
+<main>
+
+<header>
+  <div>
+    <small>ALCALÁ · SMART ENERGY</small>
+    <h1>SOLAR CONTROL <em>PRO</em></h1>
+    <div class="live">
+      <span class="dot"></span>
+      LIVE DASHBOARD
+    </div>
+  </div>
+
+  <button id="refresh" aria-label="Actualizar datos">
+    ↻
+  </button>
+</header>
+
+<div id="notice" role="status">
+  Consultando Open-Meteo…
+</div>
+
+<section>
+
+  <div class="weather">
+    <div>
+      <span id="weatherIcon">—</span>
+      <span id="weather">—</span>
+    </div>
+    <strong id="temp">—</strong>
+  </div>
+
+  <small>RADIACIÓN INSTANTÁNEA</small>
+
+  <div class="big">
+    <span id="rad">—</span>
+    <small>W/m²</small>
+  </div>
+
+  <svg viewBox="0 0 340 200"
+       aria-label="Termo solar animado">
+
+    <defs>
+
+      <linearGradient id="metal"
+        x1="0%" y1="0%"
+        x2="0%" y2="100%">
+
+        <stop offset="0%"
+          stop-color="#e5edf5"/>
+
+        <stop offset="50%"
+          stop-color="#91a5ba"/>
+
+        <stop offset="100%"
+          stop-color="#52677d"/>
+
+      </linearGradient>
+
+      <linearGradient id="panel"
+        x1="0%" y1="0%"
+        x2="100%" y2="100%">
+
+        <stop offset="0%"
+          stop-color="#245e89"/>
+
+        <stop offset="100%"
+          stop-color="#102a44"/>
+
+      </linearGradient>
+
+      <clipPath id="rayClip">
+        <rect x="0" y="0"
+          width="340" height="175"/>
+      </clipPath>
+
+    </defs>
+
+    <!-- SOPORTE -->
+
+    <path
+      d="M85 135 L65 187 H278 L255 135"
+      fill="none"
+      stroke="#71869b"
+      stroke-width="5"/>
+
+    <!-- PLACA SOLAR -->
+
+    <path
+      d="M100 109 H285 L245 176 H60 Z"
+      fill="url(#panel)"
+      stroke="#8bb9d9"
+      stroke-width="2"/>
+
+    <g stroke="#4d83a8">
+
+      <path d="
+        M137 109 L97 176
+        M174 109 L134 176
+        M211 109 L171 176
+        M248 109 L208 176
+        M80 143 H265"/>
+
+    </g>
+
+    <!-- RADIACIÓN ANIMADA -->
+
+    <g id="rays"
+       clip-path="url(#rayClip)">
+    </g>
+
+    <!-- DEPÓSITO -->
+
+    <rect
+      x="91" y="85"
+      width="195" height="36"
+      rx="18"
+      fill="url(#metal)"/>
+
+    <ellipse
+      cx="280" cy="103"
+      rx="7" ry="16"
+      fill="#71869b"/>
+
+    <text
+      x="188" y="108"
+      text-anchor="middle"
+      fill="#23374a"
+      font-size="11"
+      font-weight="bold">
+
+      TERMO SOLAR
+
+    </text>
+
+  </svg>
+
+  <div class="row">
+
+    <small id="raylabel">—</small>
+
+    <button id="motion">
+      Pausar animación
+    </button>
+
+  </div>
+
+</section>
+
+<section>
+
+  <small>PREVISIÓN 16:00</small>
+
+  <div class="big">
+    <span id="total">—</span>
+    <small>kWh/m²</small>
+  </div>
+
+  <p id="acc">Acumulado: —</p>
+
+  <div class="track">
+    <div id="fill"></div>
+    <i></i>
+  </div>
+
+  <div class="row">
+    <small>0</small>
+    <small>2,5 / 3,0 kWh/m²</small>
+  </div>
+
+</section>
+
+<section>
+
+  <small>CURVA SOLAR · 24 HORAS</small>
+
+  <div id="chart"></div>
+
+  <div class="row">
+    <small>00h</small>
+    <small>06h</small>
+    <small>12h</small>
+    <small>18h</small>
+    <small>24h</small>
+  </div>
+
+</section>
+
+<section>
+
+  <small>APOYO ELÉCTRICO PREVISTO</small>
+
+  <h2 id="status">—</h2>
+
+  <div class="cards">
+
+    <div>
+      <small>ENCENDIDO</small>
+      <b id="on">—</b>
+    </div>
+
+    <div>
+      <small>APAGADO</small>
+      <b>20:00</b>
+    </div>
+
+    <div>
+      <small>REFUERZO</small>
+      <b id="mins">—</b>
+    </div>
+
+  </div>
+
+  <p>
+    Previsión automática.
+    No indica el estado real del enchufe.
+  </p>
+
+</section>
+
+<footer>
+
+  <span id="updated">Open-Meteo</span>
+
+  <span>SOLAR CONTROL PRO LIVE · V1.0</span>
+
+</footer>
+
+</main>
+
+<script>
+
+const LAT = 37.34;
+const LON = -5.84;
+const CORTE = 16;
+
+const el = id => document.getElementById(id);
+
+const fmt = n => n.toLocaleString('es-ES',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+});
+
+// 28 ESTADOS METEOROLÓGICOS
+
+const weather = {
+
+  0: ['Despejado','☀️'],
+  1: ['Poco nuboso','🌤️'],
+  2: ['Parcialmente nuboso','⛅'],
+  3: ['Cubierto','☁️'],
+
+  45: ['Niebla','🌫️'],
+  48: ['Niebla helada','🌫️'],
+
+  51: ['Llovizna débil','🌧️'],
+  53: ['Llovizna moderada','🌧️'],
+  55: ['Llovizna intensa','🌧️'],
+
+  56: ['Llovizna helada débil','🌨️'],
+  57: ['Llovizna helada intensa','🌨️'],
+
+  61: ['Lluvia débil','🌧️'],
+  63: ['Lluvia moderada','🌧️'],
+  65: ['Lluvia intensa','🌧️'],
+
+  66: ['Lluvia helada débil','🌨️'],
+  67: ['Lluvia helada intensa','🌨️'],
+
+  71: ['Nevada débil','🌨️'],
+  73: ['Nevada moderada','🌨️'],
+  75: ['Nevada intensa','❄️'],
+  77: ['Granos de nieve','❄️'],
+
+  80: ['Chubascos débiles','🌦️'],
+  81: ['Chubascos moderados','🌧️'],
+  82: ['Chubascos violentos','🌧️'],
+
+  85: ['Chubascos de nieve débiles','🌨️'],
+  86: ['Chubascos de nieve intensos','🌨️'],
+
+  95: ['Tormenta','⛈️'],
+  96: ['Tormenta con granizo leve','⛈️'],
+  99: ['Tormenta con granizo fuerte','⛈️']
+
+};
+
+let paused = false;
+let busy = false;
+
+// CONTROL DE ANIMACIÓN
+
+el('motion').onclick = () => {
+
+  paused = !paused;
+
+  el('rays').classList.toggle(
+    'paused', paused
+  );
+
+  el('motion').textContent = paused
+    ? 'Reanudar animación'
+    : 'Pausar animación';
+
+};
+
+// MOSTRAR DATOS
+
+function render(d) {
+
+  const a = d.current;
+  const h = d.hourly.shortwave_radiation;
+
+  if (
+    !a ||
+    !h ||
+    h.length < 24 ||
+    h.slice(0,24).some(
+      v => !Number.isFinite(v)
+    ) ||
+    !Number.isFinite(a.shortwave_radiation) ||
+    !Number.isFinite(a.temperature_2m)
+  ) {
+    throw Error('Datos incompletos');
+  }
+
+  const hour = Number(
+    new Intl.DateTimeFormat('es-ES',{
+      timeZone:'Europe/Madrid',
+      hour:'2-digit',
+      hourCycle:'h23'
+    }).format(new Date())
+  );
+
+  const rad = a.is_day
+    ? Math.max(
+        0,
+        Math.round(a.shortwave_radiation)
+      )
+    : 0;
+
+  const total = h.slice(0,CORTE)
+    .reduce((s,v)=>s+v,0)/1000;
+
+  const acc = h.slice(
+    0,Math.min(hour,CORTE)
+  ).reduce((s,v)=>s+v,0)/1000;
+
+  // HORARIOS DE APOYO ELÉCTRICO
+
+  const mins = total < 2.5
+    ? 120
+    : total < 3
+      ? 60
+      : 0;
+
+  const color = mins === 120
+    ? '#ffbd59'
+    : mins === 60
+      ? '#38bdf8'
+      : '#34d399';
+
+  // METEOROLOGÍA
+
+  let m = weather[a.weather_code]
+    || ['Desconocido','❔'];
+
+  let description = m[0];
+  let icon = m[1];
+
+  if (!a.is_day) {
+
+    if (a.weather_code === 0) {
+      description = 'Noche despejada';
+      icon = '🌙';
+    }
+
+    if ([1,2].includes(a.weather_code)) {
+      icon = '☁️🌙';
+    }
+
+  }
+
+  el('weatherIcon').textContent = icon;
+  el('weather').textContent = description;
+
+  el('temp').textContent =
+    Math.round(a.temperature_2m)+'°C';
+
+  el('rad').textContent = rad;
+
+  el('total').textContent = fmt(total);
+
+  el('total').style.color = color;
+
+  el('acc').textContent =
+    'Acumulado estimado: '+
+    fmt(acc)+' kWh/m²';
+
+  el('on').textContent = mins === 120
+    ? '18:00'
+    : mins === 60
+      ? '19:00'
+      : 'OFF';
+
+  el('mins').textContent = mins+' min';
+
+  el('status').textContent = mins === 120
+    ? 'APOYO INTENSIVO'
+    : mins === 60
+      ? 'APOYO MODERADO'
+      : 'SOL SUFICIENTE';
+
+  el('status').style.color = color;
+  el('on').style.color = color;
+
+  el('fill').style.width =
+    Math.min(100,Math.max(0,total/3*100))+'%';
+
+  el('fill').style.background = color;
+
+  // FLECHAS PROPORCIONALES
+
+  const n = Math.min(
+    12,
+    Math.ceil(rad/85)
+  );
+
+  el('raylabel').textContent = n
+
+    ? n+' flechas · radiación '+
+      (rad < 200
+        ? 'baja'
+        : rad < 500
+          ? 'media'
+          : 'alta')
+
+    : 'SIN RADIACIÓN SOLAR';
+
+  el('rays').replaceChildren();
+
+  for(let i=0;i<n;i++) {
+
+    const x = n===1
+      ? 170
+      : 65+i*210/(n-1);
+
+    const p = document.createElementNS(
+      'http://www.w3.org/2000/svg',
+      'path'
+    );
+
+    p.setAttribute(
+      'd',
+      'M'+x+' 12 l-8 35 m-5 -10 5 10 9 -6'
+    );
+
+    p.setAttribute('class','ray');
+
+    p.style.animationDelay =
+      (-i*.24)+'s';
+
+    p.style.setProperty(
+      '--speed',
+      Math.max(.7,2.8-rad/500)+'s'
+    );
+
+    el('rays').append(p);
+
+  }
+
+  // GRÁFICO SOLAR
+
+  el('chart').replaceChildren();
+
+  const max = Math.max(
+    100,
+    ...h.slice(0,24)
+  );
+
+  h.slice(0,24).forEach((v,i)=>{
+
+    const b = document.createElement('div');
+
+    b.className = 'bar '+(
+      i>hour
+        ? 'future'
+        : i===hour
+          ? 'current'
+          : ''
+    );
+
+    b.style.height =
+      Math.max(2,v/max*100)+'%';
+
+    b.title = i+':00 · '+v+' W/m²';
+
+    el('chart').append(b);
+
+  });
+
+  el('updated').textContent =
+    'Open-Meteo · Actualizado a las '+
+
+    new Date().toLocaleTimeString('es-ES',{
+      timeZone:'Europe/Madrid',
+      hour:'2-digit',
+      minute:'2-digit'
+    });
+
+}
+
+// CONSULTAR OPEN-METEO
+
+async function refresh() {
+
+  if(busy) return;
+
+  busy = true;
+
+  el('refresh').disabled = true;
+
+  try {
+
+    const url =
+      'https://api.open-meteo.com/v1/forecast'+
+      '?latitude='+LAT+
+      '&longitude='+LON+
+      '&current=temperature_2m,weather_code,is_day,shortwave_radiation'+
+      '&hourly=shortwave_radiation'+
+      '&timezone=Europe%2FMadrid'+
+      '&forecast_days=1';
+
+    const r = await fetch(url,{
+      cache:'no-store'
+    });
+
+    if(!r.ok) {
+      throw Error('HTTP '+r.status);
+    }
+
+    render(await r.json());
+
+    el('notice').textContent =
+      '● Datos actualizados · Consulta cada 10 min';
+
+  } catch(e) {
+
+    el('notice').textContent =
+      'Error de conexión. Los valores visibles, si existen, son anteriores. Pulsa ↻ para reintentar.';
+
+  } finally {
+
+    busy = false;
+    el('refresh').disabled = false;
+
+  }
+
+}
+
+// ACTUALIZACIÓN AUTOMÁTICA
+
+el('refresh').onclick = refresh;
+
+refresh();
+
+setInterval(refresh,600000);
+
+document.addEventListener(
+  'visibilitychange',
+  ()=>{
+    if(!document.hidden) refresh();
+  }
+);
+
+</script>
+
+</body>
+</html>

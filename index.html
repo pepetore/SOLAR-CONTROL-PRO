@@ -1,280 +1,179 @@
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Solar PRO">
-<meta name="theme-color" content="#0a1320">
-<title>SOLAR CONTROL PRO LIVE</title>
+<meta name="theme-color" content="#091321">
+<title>Solar PRO 2.0</title>
 
 <style>
 
-:root {
-  color-scheme: dark;
-  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-  background: #0a1320;
-  color: #edf5ff;
+*{box-sizing:border-box}
+
+body{
+margin:0;
+background:#091321;
+color:#edf5ff;
+font:16px -apple-system,BlinkMacSystemFont,sans-serif
 }
 
-* {
-  box-sizing: border-box;
+main{
+max-width:600px;
+margin:auto;
+padding:20px 16px 110px
 }
 
-body {
-  margin: 0;
-  padding-top: env(safe-area-inset-top);
-  padding-bottom: env(safe-area-inset-bottom);
+header,.row{
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:10px
 }
 
-main {
-  max-width: 540px;
-  margin: auto;
-  padding: 18px;
-  display: grid;
-  gap: 12px;
+h1{font-size:23px;margin:5px 0}
+h2{font-size:18px}
+small,p{color:#9eb4ca}
+small{font-size:11px;letter-spacing:1px}
+
+section{
+background:#142438;
+border:1px solid #294158;
+border-radius:19px;
+padding:16px;
+margin:12px 0
 }
 
-header, .row, .weather {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
+button,input,select{
+font:inherit;
+color:inherit;
+background:#20384e;
+border:1px solid #42617b;
+border-radius:10px;
+padding:10px
 }
 
-h1 {
-  font-size: 25px;
-  margin: 5px 0;
+button{cursor:pointer}
+
+nav{
+position:fixed;
+bottom:0;
+left:0;
+right:0;
+background:#101e30;
+display:flex;
+justify-content:center;
+padding:8px 0 calc(8px + env(safe-area-inset-bottom));
+z-index:5
 }
 
-em {
-  color: #38bdf8;
-  font-style: normal;
+nav button{
+border:0;
+background:none;
+font-size:11px;
+flex:1;
+max-width:120px;
+padding:8px 0;
+color:#a3b7cc
 }
 
-small {
-  font-size: 11px;
-  letter-spacing: 1px;
-  color: #a3b7cc;
-  font-weight: 650;
+nav button.active{color:#38bdf8}
+nav b{display:block;font-size:22px}
+
+.big{
+font-size:40px;
+font-weight:750;
+color:#ffbd59
 }
 
-section {
-  background: linear-gradient(145deg,#16263a,#101d2e);
-  border: 1px solid #263b51;
-  border-radius: 20px;
-  padding: 16px;
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px
 }
 
-button {
-  border: 1px solid #36536c;
-  background: #1c344a;
-  color: #d8edff;
-  border-radius: 12px;
-  padding: 10px;
-  cursor: pointer;
+.grid>div{
+background:#0e1b2b;
+padding:12px;
+border-radius:12px
 }
 
-#refresh {
-  font-size: 25px;
-  padding: 5px 14px;
+.grid strong{
+display:block;
+font-size:22px;
+margin-top:6px
 }
 
-#notice, footer, p {
-  font-size: 12px;
-  color: #a3b7cc;
+svg{width:100%;display:block}
+
+.ray{
+stroke:#ffbd59;
+stroke-width:3;
+fill:none;
+animation:fall var(--speed,2s) linear infinite;
+filter:drop-shadow(0 0 4px orange)
 }
 
-.big {
-  font-size: 48px;
-  font-weight: 750;
-  letter-spacing: -2px;
-  color: #ffbd59;
-  line-height: 1.1;
+@keyframes fall{
+0%{transform:translateY(-20px);opacity:0}
+20%,75%{opacity:1}
+100%{transform:translateY(100px);opacity:0}
 }
 
-.big small {
-  font-size: 15px;
-  letter-spacing: 0;
+.weather{
+display:inline-block;
+animation:float 3s ease-in-out infinite
 }
 
-.weather {
-  margin-bottom: 16px;
+@keyframes float{
+50%{transform:translateY(-5px)}
 }
 
-.weather strong {
-  font-size: 28px;
+.paused .ray{
+animation-play-state:paused
 }
 
-#weatherIcon {
-  display: inline-block;
-  font-size: 28px;
-  animation: floating 4s ease-in-out infinite;
+#chart{
+display:flex;
+align-items:end;
+height:90px;
+gap:3px
 }
 
-@keyframes floating {
-  0%,100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-4px);
-  }
+.bar{
+flex:1;
+background:#ffbd59;
+border-radius:3px;
+min-width:0
 }
 
-svg {
-  display: block;
-  width: 100%;
-  max-height: 240px;
+.future{background:#77603d}
+
+label{
+display:block;
+margin:14px 0
 }
 
-.ray {
-  animation: fall var(--speed,2s) linear infinite;
-  stroke: #ffbd59;
-  stroke-width: 3;
-  fill: none;
-  stroke-linecap: round;
-  filter: drop-shadow(0 0 3px #ffb84d);
+label input,label select{
+display:block;
+width:100%;
+margin-top:6px
 }
 
-@keyframes fall {
-  0% {
-    transform: translateY(-25px);
-    opacity: 0;
-  }
-  20% {
-    opacity: 1;
-  }
-  80% {
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(95px);
-    opacity: 0;
-  }
+.day{
+padding:12px 0;
+border-bottom:1px solid #294158
 }
 
-.paused .ray {
-  animation-play-state: paused;
-}
+.muted{color:#9eb4ca;font-size:13px}
+.cyan{color:#38bdf8}
+.green{color:#34d399}
 
-@media(prefers-reduced-motion: reduce) {
-  .ray, #weatherIcon {
-    animation: none;
-  }
-}
+[hidden]{display:none!important}
 
-.track {
-  height: 10px;
-  background: #293b50;
-  border-radius: 8px;
-  position: relative;
-  margin: 14px 0 8px;
-}
-
-#fill {
-  height: 100%;
-  border-radius: 8px;
-  background: #ffbd59;
-  width: 0;
-  transition: width 1s;
-}
-
-.track i {
-  position: absolute;
-  left: 83.333%;
-  top: -4px;
-  height: 18px;
-  border-left: 2px solid white;
-}
-
-#chart {
-  height: 90px;
-  display: flex;
-  align-items: flex-end;
-  gap: 3px;
-  margin: 12px 0 5px;
-  background: repeating-linear-gradient(
-    to top,
-    transparent 0 29px,
-    #263b51 29px 30px
-  );
-}
-
-.bar {
-  flex: 1;
-  background: #ffbd59;
-  border-radius: 3px 3px 0 0;
-  min-width: 0;
-}
-
-.future {
-  background: #79613c;
-}
-
-.current {
-  outline: 1px solid #38bdf8;
-}
-
-.cards {
-  display: grid;
-  grid-template-columns: repeat(3,1fr);
-  gap: 6px;
-}
-
-.cards div {
-  background: #0d1928;
-  border-radius: 12px;
-  padding: 12px 3px;
-  text-align: center;
-}
-
-.cards small {
-  font-size: 9px;
-  letter-spacing: .3px;
-}
-
-.cards b {
-  display: block;
-  font-size: 21px;
-  margin-top: 7px;
-}
-
-h2 {
-  font-size: 17px;
-  color: #ffbd59;
-  margin: 8px 0 12px;
-}
-
-footer {
-  display: grid;
-  gap: 10px;
-  padding: 4px;
-  text-align: center;
-}
-
-.live {
-  color: #34d399;
-  font-size: 10px;
-  letter-spacing: 2px;
-  font-weight: bold;
-}
-
-.dot {
-  display: inline-block;
-  width: 7px;
-  height: 7px;
-  background: #34d399;
-  border-radius: 50%;
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  50% {
-    box-shadow: 0 0 10px #34d399;
-    opacity: .5;
-  }
+@media(prefers-reduced-motion:reduce){
+.ray,.weather{animation:none}
 }
 
 </style>
@@ -285,575 +184,1280 @@ footer {
 <main>
 
 <header>
-  <div>
-    <small>ALCALÁ · SMART ENERGY</small>
-    <h1>SOLAR CONTROL <em>PRO</em></h1>
-    <div class="live">
-      <span class="dot"></span>
-      LIVE DASHBOARD
-    </div>
-  </div>
-
-  <button id="refresh" aria-label="Actualizar datos">
-    ↻
-  </button>
-</header>
-
-<div id="notice" role="status">
-  Consultando Open-Meteo…
+<div>
+<small>ALCALÁ · SMART ENERGY</small>
+<h1>SOLAR CONTROL <span class="cyan">PRO</span></h1>
+<small class="green">ENERGY CENTER 2.0</small>
 </div>
 
+<button id="refresh">↻</button>
+</header>
+
+<p id="notice" role="status">
+Consultando Open-Meteo…
+</p>
+
+<!-- PANTALLA DE INICIO -->
+
+<div id="inicio" class="page">
+
 <section>
 
-  <div class="weather">
-    <div>
-      <span id="weatherIcon">—</span>
-      <span id="weather">—</span>
-    </div>
-    <strong id="temp">—</strong>
-  </div>
+<div class="row">
+<span id="weather">—</span>
+<strong id="temp">—</strong>
+</div>
 
-  <small>RADIACIÓN INSTANTÁNEA</small>
+<svg viewBox="0 0 340 290"
+aria-label="Medidor y termo solar animado">
 
-  <div class="big">
-    <span id="rad">—</span>
-    <small>W/m²</small>
-  </div>
+<defs>
 
-  <svg viewBox="0 0 340 200"
-       aria-label="Termo solar animado">
+<linearGradient id="metal"
+x1="0" y1="0" x2="0" y2="1">
 
-    <defs>
+<stop stop-color="#e7eef5"/>
+<stop offset=".5" stop-color="#91a5ba"/>
+<stop offset="1" stop-color="#52677d"/>
 
-      <linearGradient id="metal"
-        x1="0%" y1="0%"
-        x2="0%" y2="100%">
+</linearGradient>
 
-        <stop offset="0%"
-          stop-color="#e5edf5"/>
+<linearGradient id="plate">
+<stop stop-color="#245e89"/>
+<stop offset="1" stop-color="#102a44"/>
+</linearGradient>
 
-        <stop offset="50%"
-          stop-color="#91a5ba"/>
+<clipPath id="clip">
+<rect y="120" width="340" height="145"/>
+</clipPath>
 
-        <stop offset="100%"
-          stop-color="#52677d"/>
+</defs>
 
-      </linearGradient>
+<!-- MEDIDOR DIGITAL -->
 
-      <linearGradient id="panel"
-        x1="0%" y1="0%"
-        x2="100%" y2="100%">
+<path
+d="M100 105 A80 80 0 1 1 240 105"
+fill="none"
+stroke="#30465d"
+stroke-width="12"
+stroke-linecap="round"/>
 
-        <stop offset="0%"
-          stop-color="#245e89"/>
+<path id="gauge"
+d="M100 105 A80 80 0 1 1 240 105"
+pathLength="100"
+stroke-dasharray="0 100"
+fill="none"
+stroke="#ffbd59"
+stroke-width="12"
+stroke-linecap="round"/>
 
-        <stop offset="100%"
-          stop-color="#102a44"/>
+<text id="rad"
+x="170" y="76"
+text-anchor="middle"
+fill="#ffbd59"
+font-size="38"
+font-weight="bold">—</text>
 
-      </linearGradient>
+<text
+x="170" y="96"
+text-anchor="middle"
+fill="#a3b7cc"
+font-size="12">W/m²</text>
 
-      <clipPath id="rayClip">
-        <rect x="0" y="0"
-          width="340" height="175"/>
-      </clipPath>
+<!-- FLECHAS SOLARES -->
 
-    </defs>
+<g id="rays"
+clip-path="url(#clip)">
+</g>
 
-    <!-- SOPORTE -->
+<!-- SOPORTE -->
 
-    <path
-      d="M85 135 L65 187 H278 L255 135"
-      fill="none"
-      stroke="#71869b"
-      stroke-width="5"/>
+<path
+d="M85 225L65 280H278L255 225"
+fill="none"
+stroke="#71869b"
+stroke-width="5"/>
 
-    <!-- PLACA SOLAR -->
+<!-- PLACA SOLAR -->
 
-    <path
-      d="M100 109 H285 L245 176 H60 Z"
-      fill="url(#panel)"
-      stroke="#8bb9d9"
-      stroke-width="2"/>
+<path id="panel"
+d="M100 202H285L245 269H60Z"
+fill="url(#plate)"
+stroke="#8bb9d9"
+stroke-width="2"/>
 
-    <g stroke="#4d83a8">
+<path
+d="M137 202L97 269
+M174 202L134 269
+M211 202L171 269
+M248 202L208 269
+M80 235H265"
+stroke="#4d83a8"/>
 
-      <path d="
-        M137 109 L97 176
-        M174 109 L134 176
-        M211 109 L171 176
-        M248 109 L208 176
-        M80 143 H265"/>
+<!-- DEPÓSITO -->
 
-    </g>
+<rect
+x="91" y="178"
+width="195" height="36"
+rx="18"
+fill="url(#metal)"/>
 
-    <!-- RADIACIÓN ANIMADA -->
+<text
+x="188" y="201"
+text-anchor="middle"
+fill="#23374a"
+font-size="11"
+font-weight="bold">
+TERMO SOLAR
+</text>
 
-    <g id="rays"
-       clip-path="url(#rayClip)">
-    </g>
+</svg>
 
-    <!-- DEPÓSITO -->
-
-    <rect
-      x="91" y="85"
-      width="195" height="36"
-      rx="18"
-      fill="url(#metal)"/>
-
-    <ellipse
-      cx="280" cy="103"
-      rx="7" ry="16"
-      fill="#71869b"/>
-
-    <text
-      x="188" y="108"
-      text-anchor="middle"
-      fill="#23374a"
-      font-size="11"
-      font-weight="bold">
-
-      TERMO SOLAR
-
-    </text>
-
-  </svg>
-
-  <div class="row">
-
-    <small id="raylabel">—</small>
-
-    <button id="motion">
-      Pausar animación
-    </button>
-
-  </div>
+<div class="row">
+<small id="raylabel">—</small>
+<button id="pause">Pausar</button>
+</div>
 
 </section>
 
 <section>
 
-  <small>PREVISIÓN 16:00</small>
+<div class="grid">
 
-  <div class="big">
-    <span id="total">—</span>
-    <small>kWh/m²</small>
-  </div>
+<div>
+<small>PREVISIÓN 16:00</small>
+<strong id="total">—</strong>
+<small>kWh/m²</small>
+</div>
 
-  <p id="acc">Acumulado: —</p>
+<div>
+<small>APOYO PREVISTO</small>
+<strong id="on">—</strong>
+<small id="duration">—</small>
+</div>
 
-  <div class="track">
-    <div id="fill"></div>
-    <i></i>
-  </div>
+<div>
+<small>CONSUMO MÁX. PREVISTO</small>
+<strong id="energy">—</strong>
+</div>
 
-  <div class="row">
-    <small>0</small>
-    <small>2,5 / 3,0 kWh/m²</small>
-  </div>
+<div>
+<small>AHORRO ESTIMADO MÁX.</small>
+<strong id="saving">—</strong>
+</div>
 
-</section>
+</div>
 
-<section>
-
-  <small>CURVA SOLAR · 24 HORAS</small>
-
-  <div id="chart"></div>
-
-  <div class="row">
-    <small>00h</small>
-    <small>06h</small>
-    <small>12h</small>
-    <small>18h</small>
-    <small>24h</small>
-  </div>
+<p id="countdown">—</p>
 
 </section>
 
 <section>
 
-  <small>APOYO ELÉCTRICO PREVISTO</small>
+<small>CURVA SOLAR · 24 HORAS</small>
 
-  <h2 id="status">—</h2>
+<div id="chart"></div>
 
-  <div class="cards">
+<div class="row">
+<small>00h</small>
+<small>06h</small>
+<small>12h</small>
+<small>18h</small>
+<small>24h</small>
+</div>
 
-    <div>
-      <small>ENCENDIDO</small>
-      <b id="on">—</b>
-    </div>
-
-    <div>
-      <small>APAGADO</small>
-      <b>20:00</b>
-    </div>
-
-    <div>
-      <small>REFUERZO</small>
-      <b id="mins">—</b>
-    </div>
-
-  </div>
-
-  <p>
-    Previsión automática.
-    No indica el estado real del enchufe.
-  </p>
+<p id="acc">—</p>
 
 </section>
 
-<footer>
+</div>
 
-  <span id="updated">Open-Meteo</span>
+<!-- PREVISIÓN SEMANAL -->
 
-  <span>SOLAR CONTROL PRO LIVE · V1.0</span>
+<div id="prevision" class="page" hidden>
 
-</footer>
+<section>
+
+<h2>Previsión de 7 días</h2>
+
+<p>
+Radiación estimada y apoyo eléctrico
+según los umbrales locales.
+</p>
+
+<div id="week">—</div>
+
+</section>
+
+</div>
+
+<!-- MONITORIZACIÓN DEL TERMO -->
+
+<div id="termo" class="page" hidden>
+
+<section>
+
+<h2>Monitorización del termo</h2>
+
+<p>
+Estado real Meross:
+pendiente de conexión.
+</p>
+
+<p>
+Potencia real instantánea:
+no disponible.
+</p>
+
+<p>
+Potencia de referencia:
+<strong id="reference">—</strong>
+</p>
+
+<p>
+Horario previsto:
+<strong id="schedule">—</strong>
+</p>
+
+<p>
+La aplicación no controla el enchufe.
+</p>
+
+</section>
+
+<section>
+
+<h2>FusionSolar Huawei</h2>
+
+<p>
+Integración de lectura pendiente.
+No se muestran datos inventados.
+</p>
+
+</section>
+
+</div>
+
+<!-- CONSUMO Y AHORRO -->
+
+<div id="consumo" class="page" hidden>
+
+<section>
+
+<h2>Balance previsto</h2>
+
+<div id="balance">—</div>
+
+<p>
+Estimación máxima con resistencia
+funcionando todo el intervalo.
+El termostato puede reducir el consumo.
+</p>
+
+</section>
+
+<section>
+
+<h2>Historial de consumo real</h2>
+
+<p>
+Introduce lecturas diarias de Meross.
+Se guardan en este dispositivo.
+</p>
+
+<label>
+Fecha
+<input id="date" type="date">
+</label>
+
+<label>
+Consumo diario (kWh)
+<input id="reading"
+type="number"
+min="0"
+step="0.001">
+</label>
+
+<button id="saveReading">
+Guardar lectura
+</button>
+
+<p id="readingMsg" role="status"></p>
+
+<div id="history"></div>
+
+</section>
+
+</div>
+
+<!-- AJUSTES -->
+
+<div id="ajustes" class="page" hidden>
+
+<section>
+
+<h2>Ajustes de previsión</h2>
+
+<label>
+Potencia de referencia (W)
+
+<input id="power"
+type="number"
+min="1"
+step="0.01">
+
+</label>
+
+<label>
+Precio electricidad (€/kWh)
+
+<input id="price"
+type="number"
+min="0"
+step="0.001"
+placeholder="Introduce tu tarifa">
+
+</label>
+
+<label>
+
+Perfil local
+
+<select id="season">
+
+<option value="winter">
+Invierno
+</option>
+
+<option value="summer">
+Verano
+</option>
+
+</select>
+
+</label>
+
+<label>
+
+Umbral inferior (kWh/m²)
+
+<input id="low"
+type="number"
+min="0"
+step="0.1">
+
+</label>
+
+<label>
+
+Umbral superior (kWh/m²)
+
+<input id="high"
+type="number"
+min="0"
+step="0.1">
+
+</label>
+
+<button id="save">
+Guardar ajustes
+</button>
+
+<p id="settingsMsg" role="status"></p>
+
+<p>
+Los perfiles y umbrales solo cambian
+la previsión de esta app.
+No modifican Make.
+Ambos perfiles empiezan con 2,5 y 3,0.
+</p>
+
+</section>
+
+<section>
+
+<h2>Demostración visual</h2>
+
+<label>
+
+<input id="demo"
+type="checkbox"
+style="display:inline;width:auto">
+
+Simular radiación (solo animación)
+
+</label>
+
+<label>
+
+Radiación simulada
+
+<input id="demoRad"
+type="range"
+min="0"
+max="1020"
+value="765">
+
+</label>
+
+<p>
+Los horarios y consumos no se simulan.
+</p>
+
+</section>
+
+<section>
+
+<h2>Notificaciones</h2>
+
+<p>
+Los avisos push requieren una
+integración adicional.
+La cuenta atrás funciona mientras
+la app está abierta.
+</p>
+
+</section>
+
+</div>
 
 </main>
 
+<!-- MENÚ INFERIOR -->
+
+<nav>
+
+<button data-page="inicio" class="active">
+<b>⌂</b>Inicio
+</button>
+
+<button data-page="prevision">
+<b>☀</b>Previsión
+</button>
+
+<button data-page="termo">
+<b>◉</b>Termo
+</button>
+
+<button data-page="consumo">
+<b>▥</b>Consumo
+</button>
+
+<button data-page="ajustes">
+<b>⚙</b>Ajustes
+</button>
+
+</nav>
+
 <script>
 
-const LAT = 37.34;
-const LON = -5.84;
-const CORTE = 16;
+// SOLAR CONTROL PRO 2.0
+// ENERGY CENTER
 
-const el = id => document.getElementById(id);
+const $ = id => document.getElementById(id);
 
-const fmt = n => n.toLocaleString('es-ES',{
-  minimumFractionDigits:2,
-  maximumFractionDigits:2
+const fmt = (n,d=2) =>
+Number(n).toLocaleString('es-ES',{
+minimumFractionDigits:d,
+maximumFractionDigits:d
 });
+
+// CONFIGURACIÓN INICIAL
+
+const defaults = {
+
+power:1584.57,
+price:null,
+season:'winter',
+
+winter:{
+low:2.5,
+high:3
+},
+
+summer:{
+low:2.5,
+high:3
+}
+
+};
+
+function load(k,f){
+
+try{
+return JSON.parse(localStorage.getItem(k))||f
+}catch{
+return f
+}
+
+}
+
+let settings=load('solar-settings-v2',defaults);
+let readings=load('solar-readings-v2',{});
+let data=null;
+let paused=false;
+let busy=false;
 
 // 28 ESTADOS METEOROLÓGICOS
 
-const weather = {
+const weather={
 
-  0: ['Despejado','☀️'],
-  1: ['Poco nuboso','🌤️'],
-  2: ['Parcialmente nuboso','⛅'],
-  3: ['Cubierto','☁️'],
+0:['Despejado','☀️'],
+1:['Poco nuboso','🌤️'],
+2:['Parcialmente nuboso','⛅'],
+3:['Cubierto','☁️'],
 
-  45: ['Niebla','🌫️'],
-  48: ['Niebla helada','🌫️'],
+45:['Niebla','🌫️'],
+48:['Niebla helada','🌫️'],
 
-  51: ['Llovizna débil','🌧️'],
-  53: ['Llovizna moderada','🌧️'],
-  55: ['Llovizna intensa','🌧️'],
+51:['Llovizna débil','🌧️'],
+53:['Llovizna moderada','🌧️'],
+55:['Llovizna intensa','🌧️'],
 
-  56: ['Llovizna helada débil','🌨️'],
-  57: ['Llovizna helada intensa','🌨️'],
+56:['Llovizna helada débil','🌨️'],
+57:['Llovizna helada intensa','🌨️'],
 
-  61: ['Lluvia débil','🌧️'],
-  63: ['Lluvia moderada','🌧️'],
-  65: ['Lluvia intensa','🌧️'],
+61:['Lluvia débil','🌧️'],
+63:['Lluvia moderada','🌧️'],
+65:['Lluvia intensa','🌧️'],
 
-  66: ['Lluvia helada débil','🌨️'],
-  67: ['Lluvia helada intensa','🌨️'],
+66:['Lluvia helada débil','🌨️'],
+67:['Lluvia helada intensa','🌨️'],
 
-  71: ['Nevada débil','🌨️'],
-  73: ['Nevada moderada','🌨️'],
-  75: ['Nevada intensa','❄️'],
-  77: ['Granos de nieve','❄️'],
+71:['Nevada débil','🌨️'],
+73:['Nevada moderada','🌨️'],
+75:['Nevada intensa','❄️'],
+77:['Granos de nieve','❄️'],
 
-  80: ['Chubascos débiles','🌦️'],
-  81: ['Chubascos moderados','🌧️'],
-  82: ['Chubascos violentos','🌧️'],
+80:['Chubascos débiles','🌦️'],
+81:['Chubascos moderados','🌧️'],
+82:['Chubascos violentos','🌧️'],
 
-  85: ['Chubascos de nieve débiles','🌨️'],
-  86: ['Chubascos de nieve intensos','🌨️'],
+85:['Chubascos de nieve débiles','🌨️'],
+86:['Chubascos de nieve intensos','🌨️'],
 
-  95: ['Tormenta','⛈️'],
-  96: ['Tormenta con granizo leve','⛈️'],
-  99: ['Tormenta con granizo fuerte','⛈️']
-
-};
-
-let paused = false;
-let busy = false;
-
-// CONTROL DE ANIMACIÓN
-
-el('motion').onclick = () => {
-
-  paused = !paused;
-
-  el('rays').classList.toggle(
-    'paused', paused
-  );
-
-  el('motion').textContent = paused
-    ? 'Reanudar animación'
-    : 'Pausar animación';
+95:['Tormenta','⛈️'],
+96:['Tormenta con granizo leve','⛈️'],
+99:['Tormenta con granizo fuerte','⛈️']
 
 };
 
-// MOSTRAR DATOS
+// FECHA Y HORA LOCAL
 
-function render(d) {
+function local(){
 
-  const a = d.current;
-  const h = d.hourly.shortwave_radiation;
+return Object.fromEntries(
 
-  if (
-    !a ||
-    !h ||
-    h.length < 24 ||
-    h.slice(0,24).some(
-      v => !Number.isFinite(v)
-    ) ||
-    !Number.isFinite(a.shortwave_radiation) ||
-    !Number.isFinite(a.temperature_2m)
-  ) {
-    throw Error('Datos incompletos');
-  }
+new Intl.DateTimeFormat('en-GB',{
 
-  const hour = Number(
-    new Intl.DateTimeFormat('es-ES',{
-      timeZone:'Europe/Madrid',
-      hour:'2-digit',
-      hourCycle:'h23'
-    }).format(new Date())
-  );
+timeZone:'Europe/Madrid',
+year:'numeric',
+month:'2-digit',
+day:'2-digit',
+hour:'2-digit',
+minute:'2-digit',
+second:'2-digit',
+hourCycle:'h23'
 
-  const rad = a.is_day
-    ? Math.max(
-        0,
-        Math.round(a.shortwave_radiation)
-      )
-    : 0;
+}).formatToParts(new Date())
 
-  const total = h.slice(0,CORTE)
-    .reduce((s,v)=>s+v,0)/1000;
+.map(p=>[p.type,p.value])
 
-  const acc = h.slice(
-    0,Math.min(hour,CORTE)
-  ).reduce((s,v)=>s+v,0)/1000;
-
-  // HORARIOS DE APOYO ELÉCTRICO
-
-  const mins = total < 2.5
-    ? 120
-    : total < 3
-      ? 60
-      : 0;
-
-  const color = mins === 120
-    ? '#ffbd59'
-    : mins === 60
-      ? '#38bdf8'
-      : '#34d399';
-
-  // METEOROLOGÍA
-
-  let m = weather[a.weather_code]
-    || ['Desconocido','❔'];
-
-  let description = m[0];
-  let icon = m[1];
-
-  if (!a.is_day) {
-
-    if (a.weather_code === 0) {
-      description = 'Noche despejada';
-      icon = '🌙';
-    }
-
-    if ([1,2].includes(a.weather_code)) {
-      icon = '☁️🌙';
-    }
-
-  }
-
-  el('weatherIcon').textContent = icon;
-  el('weather').textContent = description;
-
-  el('temp').textContent =
-    Math.round(a.temperature_2m)+'°C';
-
-  el('rad').textContent = rad;
-
-  el('total').textContent = fmt(total);
-
-  el('total').style.color = color;
-
-  el('acc').textContent =
-    'Acumulado estimado: '+
-    fmt(acc)+' kWh/m²';
-
-  el('on').textContent = mins === 120
-    ? '18:00'
-    : mins === 60
-      ? '19:00'
-      : 'OFF';
-
-  el('mins').textContent = mins+' min';
-
-  el('status').textContent = mins === 120
-    ? 'APOYO INTENSIVO'
-    : mins === 60
-      ? 'APOYO MODERADO'
-      : 'SOL SUFICIENTE';
-
-  el('status').style.color = color;
-  el('on').style.color = color;
-
-  el('fill').style.width =
-    Math.min(100,Math.max(0,total/3*100))+'%';
-
-  el('fill').style.background = color;
-
-  // FLECHAS PROPORCIONALES
-
-  const n = Math.min(
-    12,
-    Math.ceil(rad/85)
-  );
-
-  el('raylabel').textContent = n
-
-    ? n+' flechas · radiación '+
-      (rad < 200
-        ? 'baja'
-        : rad < 500
-          ? 'media'
-          : 'alta')
-
-    : 'SIN RADIACIÓN SOLAR';
-
-  el('rays').replaceChildren();
-
-  for(let i=0;i<n;i++) {
-
-    const x = n===1
-      ? 170
-      : 65+i*210/(n-1);
-
-    const p = document.createElementNS(
-      'http://www.w3.org/2000/svg',
-      'path'
-    );
-
-    p.setAttribute(
-      'd',
-      'M'+x+' 12 l-8 35 m-5 -10 5 10 9 -6'
-    );
-
-    p.setAttribute('class','ray');
-
-    p.style.animationDelay =
-      (-i*.24)+'s';
-
-    p.style.setProperty(
-      '--speed',
-      Math.max(.7,2.8-rad/500)+'s'
-    );
-
-    el('rays').append(p);
-
-  }
-
-  // GRÁFICO SOLAR
-
-  el('chart').replaceChildren();
-
-  const max = Math.max(
-    100,
-    ...h.slice(0,24)
-  );
-
-  h.slice(0,24).forEach((v,i)=>{
-
-    const b = document.createElement('div');
-
-    b.className = 'bar '+(
-      i>hour
-        ? 'future'
-        : i===hour
-          ? 'current'
-          : ''
-    );
-
-    b.style.height =
-      Math.max(2,v/max*100)+'%';
-
-    b.title = i+':00 · '+v+' W/m²';
-
-    el('chart').append(b);
-
-  });
-
-  el('updated').textContent =
-    'Open-Meteo · Actualizado a las '+
-
-    new Date().toLocaleTimeString('es-ES',{
-      timeZone:'Europe/Madrid',
-      hour:'2-digit',
-      minute:'2-digit'
-    });
+)
 
 }
 
-// CONSULTAR OPEN-METEO
+function today(){
 
-async function refresh() {
+let t=local();
 
-  if(busy) return;
-
-  busy = true;
-
-  el('refresh').disabled = true;
-
-  try {
-
-    const url =
-      'https://api.open-meteo.com/v1/forecast'+
-      '?latitude='+LAT+
-      '&longitude='+LON+
-      '&current=temperature_2m,weather_code,is_day,shortwave_radiation'+
-      '&hourly=shortwave_radiation'+
-      '&timezone=Europe%2FMadrid'+
-      '&forecast_days=1';
-
-    const r = await fetch(url,{
-      cache:'no-store'
-    });
-
-    if(!r.ok) {
-      throw Error('HTTP '+r.status);
-    }
-
-    render(await r.json());
-
-    el('notice').textContent =
-      '● Datos actualizados · Consulta cada 10 min';
-
-  } catch(e) {
-
-    el('notice').textContent =
-      'Error de conexión. Los valores visibles, si existen, son anteriores. Pulsa ↻ para reintentar.';
-
-  } finally {
-
-    busy = false;
-    el('refresh').disabled = false;
-
-  }
+return t.year+'-'+t.month+'-'+t.day
 
 }
 
-// ACTUALIZACIÓN AUTOMÁTICA
+// CÁLCULOS ENERGÉTICOS
 
-el('refresh').onclick = refresh;
+function mins(v){
+
+let s=settings[settings.season];
+
+return v<s.low
+?120
+:v<s.high
+?60
+:0
+
+}
+
+function cost(k){
+
+return settings.price===null
+?'Tarifa pendiente'
+:fmt(k*settings.price)+' €'
+
+}
+
+function sum(a){
+
+return a.reduce((s,v)=>s+v,0)/1000
+
+}
+
+function hours(m){
+
+return m===120
+?'18:00–20:00'
+:m===60
+?'19:00–20:00'
+:'Sin apoyo'
+
+}
+
+// ANIMACIÓN SOLAR
+
+function rays(rad){
+
+$('rad').textContent=rad;
+
+$('gauge').setAttribute(
+'stroke-dasharray',
+Math.min(100,rad/10.2)+' 100'
+);
+
+let n=Math.min(
+12,
+Math.ceil(rad/85)
+);
+
+$('raylabel').textContent=
+
+($('demo').checked?'DEMO · ':'')+
+n+' flechas';
+
+$('panel').style.filter=
+
+'drop-shadow(0 0 '+
+rad/100+
+'px #ffb84d)';
+
+$('rays').replaceChildren();
+
+for(let i=0;i<n;i++){
+
+let p=document.createElementNS(
+'http://www.w3.org/2000/svg',
+'path'
+);
+
+let x=n===1
+?170
+:80+i*180/(n-1);
+
+p.setAttribute(
+'d',
+`M${x} 120 l-8 28 m-5 -9 5 9 9 -5`
+);
+
+p.setAttribute('class','ray');
+
+p.style.animationDelay=
+-i*.23+'s';
+
+p.style.setProperty(
+'--speed',
+Math.max(.7,2.8-rad/500)+'s'
+);
+
+$('rays').append(p)
+
+}
+
+}
+
+// RADIACIÓN DIARIA
+
+function daily(date){
+
+let h=data.hourly;
+
+return h.time.map((t,i)=>({
+
+t,
+v:h.shortwave_radiation[i]
+
+}))
+
+.filter(o=>
+o.t.startsWith(date)&&
+Number(o.t.slice(11,13))<16
+)
+
+.map(o=>o.v)
+
+}
+
+// ACTUALIZAR INTERFAZ
+
+function render(){
+
+if(!data)return;
+
+let a=data.current;
+let h=data.hourly;
+let day=today();
+
+let vals=daily(day);
+let v=sum(vals);
+let m=mins(v);
+
+let k=settings.power/1000*m/60;
+
+let avoided=
+settings.power/1000*(120-m)/60;
+
+let now=local();
+
+let w=weather[a.weather_code]
+||['Desconocido','❔'];
+
+$('weather').textContent=
+
+(a.is_day
+?w[1]
+:a.weather_code<=2
+?'🌙'
+:w[1])+' '+w[0];
+
+$('temp').textContent=
+fmt(a.temperature_2m,0)+'°C';
+
+rays(
+
+$('demo').checked
+?Number($('demoRad').value)
+:a.is_day
+?Math.max(
+0,
+Math.round(a.shortwave_radiation)
+)
+:0
+
+);
+
+$('total').textContent=fmt(v);
+
+$('on').textContent=
+m?hours(m).slice(0,5):'OFF';
+
+$('duration').textContent=
+m+' min';
+
+$('energy').textContent=
+fmt(k)+' kWh';
+
+$('saving').textContent=
+cost(avoided);
+
+$('reference').textContent=
+fmt(settings.power)+' W';
+
+$('schedule').textContent=
+hours(m);
+
+$('balance').textContent=
+
+'Consumo máximo: '+
+fmt(k)+' kWh · Coste: '+
+cost(k)+
+' · Energía evitada frente a 2 h: '+
+fmt(avoided)+' kWh'+
+' · Tiempo evitado: '+
+(120-m)+' min'+
+' · Ahorro máximo: '+
+cost(avoided);
+
+$('acc').textContent=
+
+'Acumulado estimado: '+
+fmt(sum(vals.slice(0,Number(now.hour))))+
+' kWh/m²';
+
+// GRÁFICO SOLAR
+
+let dayHours=h.time.map((t,i)=>({
+
+t,
+v:h.shortwave_radiation[i]
+
+})).filter(o=>o.t.startsWith(day));
+
+$('chart').replaceChildren();
+
+let max=Math.max(
+100,
+...dayHours.map(o=>o.v)
+);
+
+dayHours.forEach(o=>{
+
+let b=document.createElement('div');
+
+b.className='bar '+(
+
+Number(o.t.slice(11,13))>
+Number(now.hour)
+
+?'future'
+:''
+
+);
+
+b.style.height=
+Math.max(2,o.v/max*100)+'%';
+
+b.title=
+o.t.slice(11)+' · '+o.v+' W/m²';
+
+$('chart').append(b)
+
+});
+
+// PREVISIÓN DE SIETE DÍAS
+
+$('week').replaceChildren();
+
+data.daily.time.forEach((d,i)=>{
+
+let vv=daily(d);
+let r=sum(vv);
+let mm=mins(r);
+
+let ww=weather[data.daily.weather_code[i]]
+||['',''];
+
+let e=document.createElement('div');
+
+e.className='day';
+
+e.textContent=
+
+ww[1]+' '+
+d.split('-').reverse().join('/')+
+' · '+fmt(r)+' kWh/m²'+
+' · '+hours(mm);
+
+$('week').append(e)
+
+});
+
+tick()
+
+}
+
+// CUENTA ATRÁS
+
+function tick(){
+
+if(!data)return;
+
+let t=local();
+
+let m=mins(sum(daily(today())));
+
+let s=
+Number(t.hour)*3600+
+Number(t.minute)*60+
+Number(t.second);
+
+let start=(m===120?18:19)*3600;
+let end=20*3600;
+
+let left=s<start
+?start-s
+:end-s;
+
+$('countdown').textContent=
+
+!m
+?'Sin apoyo previsto hoy'
+
+:s>=end
+?'Horario previsto finalizado'
+
+:(s<start
+?'Hasta encendido previsto: '
+:'Hasta apagado previsto: ')
+
++[
+
+Math.floor(left/3600),
+Math.floor(left/60)%60,
+left%60
+
+].map(n=>
+String(n).padStart(2,'0')
+).join(':')
+
+}
+
+// CONEXIÓN OPEN-METEO
+
+async function refresh(){
+
+if(busy)return;
+
+busy=true;
+
+try{
+
+let r=await fetch(
+
+'https://api.open-meteo.com/v1/forecast'+
+'?latitude=37.34'+
+'&longitude=-5.84'+
+'&current=temperature_2m,weather_code,is_day,shortwave_radiation'+
+'&hourly=shortwave_radiation'+
+'&daily=weather_code'+
+'&timezone=Europe%2FMadrid'+
+'&forecast_days=7',
+
+{cache:'no-store'}
+
+);
+
+if(!r.ok)throw Error();
+
+let d=await r.json();
+
+if(
+
+!d.current||
+!d.daily||
+!d.hourly||
+d.hourly.shortwave_radiation.some(
+v=>!Number.isFinite(v)
+)
+
+)throw Error();
+
+data=d;
+
+render();
+
+$('notice').textContent=
+
+'● Open-Meteo · '+
+local().hour+':'+local().minute+
+' · Consulta cada 10 min'
+
+}catch{
+
+$('notice').textContent=
+
+'Error de actualización. '+
+'Los datos visibles pueden estar desactualizados.'
+
+}finally{
+
+busy=false
+
+}
+
+}
+
+// AJUSTES PERSONALIZADOS
+
+function fields(){
+
+$('power').value=settings.power;
+
+$('price').value=settings.price??'';
+
+$('season').value=settings.season;
+
+$('low').value=
+settings[settings.season].low;
+
+$('high').value=
+settings[settings.season].high
+
+}
+
+$('season').onchange=()=>{
+
+let s=settings[$('season').value];
+
+$('low').value=s.low;
+$('high').value=s.high
+
+};
+
+$('save').onclick=()=>{
+
+let p=Number($('power').value);
+
+let price=$('price').value===''
+?null
+:Number($('price').value);
+
+let lo=Number($('low').value);
+let hi=Number($('high').value);
+let season=$('season').value;
+
+if(!(
+
+p>0&&
+lo>=0&&
+hi>lo&&
+(price===null||price>=0)
+
+)){
+
+$('settingsMsg').textContent=
+'Revisa potencia, tarifa y umbrales.';
+
+return
+
+}
+
+settings={
+
+...settings,
+
+power:p,
+price,
+season,
+
+[season]:{
+
+low:lo,
+high:hi
+
+}
+
+};
+
+localStorage.setItem(
+'solar-settings-v2',
+JSON.stringify(settings)
+);
+
+$('settingsMsg').textContent=
+
+'Guardado localmente. Make no se ha modificado.';
+
+render();
+history()
+
+};
+
+// HISTORIAL ENERGÉTICO
+
+function history(){
+
+let d=today();
+
+let entries=
+Object.entries(readings).sort().reverse();
+
+let month=entries.filter(
+([k])=>k.startsWith(d.slice(0,7))
+).reduce((s,[,v])=>s+v,0);
+
+let year=entries.filter(
+([k])=>k.startsWith(d.slice(0,4))
+).reduce((s,[,v])=>s+v,0);
+
+$('history').replaceChildren();
+
+let p=document.createElement('p');
+
+p.textContent=
+
+'Lecturas registradas: mes '+
+fmt(month,3)+' kWh ('+
+cost(month)+')'+
+' · año '+fmt(year,3)+' kWh ('+
+cost(year)+')';
+
+$('history').append(p);
+
+entries.forEach(([k,v])=>{
+
+let e=document.createElement('div');
+
+e.className='day';
+
+e.textContent=
+k+' · '+fmt(v,3)+' kWh';
+
+let b=document.createElement('button');
+
+b.textContent='Eliminar';
+
+b.onclick=()=>{
+
+if(confirm('¿Eliminar esta lectura?')){
+
+delete readings[k];
+
+localStorage.setItem(
+'solar-readings-v2',
+JSON.stringify(readings)
+);
+
+history()
+
+}
+
+};
+
+e.append(' ',b);
+
+$('history').append(e)
+
+})
+
+}
+
+// GUARDAR CONSUMO REAL
+
+$('saveReading').onclick=()=>{
+
+let d=$('date').value;
+let v=Number($('reading').value);
+
+if(
+
+!d||
+d>today()||
+$('reading').value===''||
+!Number.isFinite(v)||
+v<0
+
+){
+
+$('readingMsg').textContent=
+
+'Introduce una fecha válida y un consumo no negativo.';
+
+return
+
+}
+
+readings[d]=v;
+
+localStorage.setItem(
+'solar-readings-v2',
+JSON.stringify(readings)
+);
+
+$('readingMsg').textContent=
+'Lectura guardada.';
+
+history()
+
+};
+
+// NAVEGACIÓN ENTRE PESTAÑAS
+
+document.querySelectorAll('nav button')
+
+.forEach(b=>b.onclick=()=>{
+
+document.querySelectorAll('.page')
+
+.forEach(p=>
+
+p.hidden=p.id!==b.dataset.page
+
+);
+
+document.querySelectorAll('nav button')
+
+.forEach(x=>
+
+x.classList.toggle('active',x===b)
+
+);
+
+window.scrollTo(0,0)
+
+});
+
+// PAUSAR ANIMACIONES
+
+$('pause').onclick=()=>{
+
+paused=!paused;
+
+$('rays').classList.toggle(
+'paused',
+paused
+);
+
+$('pause').textContent=
+
+paused?'Reanudar':'Pausar'
+
+};
+
+// MODO DEMOSTRACIÓN
+
+$('demo').onchange=()=>{
+
+if($('demo').checked){
+
+rays(Number($('demoRad').value))
+
+}else if(data){
+
+render()
+
+}else{
+
+rays(0)
+
+}
+
+};
+
+$('demoRad').oninput=()=>{
+
+if($('demo').checked){
+
+rays(Number($('demoRad').value))
+
+}
+
+};
+
+// INICIAR APLICACIÓN
+
+$('refresh').onclick=refresh;
+
+fields();
+
+$('date').value=today();
+
+history();
 
 refresh();
 
 setInterval(refresh,600000);
 
+setInterval(tick,1000);
+
 document.addEventListener(
-  'visibilitychange',
-  ()=>{
-    if(!document.hidden) refresh();
-  }
+
+'visibilitychange',
+
+()=>{
+
+if(!document.hidden)refresh()
+
+}
+
 );
 
 </script>

@@ -27,7 +27,69 @@ color-scheme:dark;
 }
 
 body{
-margin:0;
+
+<style>
+#splash-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(
+        ellipse at center,
+        #142d43,
+        #050d19 75%
+    );
+    opacity: 1;
+    transition: opacity 0.8s ease;
+}
+
+#splash-screen img {
+    width: 75%;
+    max-width: 340px;
+    height: auto;
+    border-radius: 22%;
+    box-shadow: 0 0 45px #35cfff40;
+}
+
+#splash-screen.fade-out {
+    opacity: 0;
+    pointer-events: none;
+}
+</style>
+
+<div id="splash-screen">
+    <img src="icon.png"
+         alt="SOLAR CONTROL PRO By:Pepe">
+</div>
+
+<script>
+(function () {
+    const splash = document.getElementById('splash-screen');
+    const logo = splash.querySelector('img');
+
+    function startWelcome() {
+        setTimeout(function () {
+            splash.classList.add('fade-out');
+
+            setTimeout(function () {
+                splash.remove();
+            }, 800);
+
+        }, 3000);
+    }
+
+    if (logo.complete) {
+        startWelcome();
+    } else {
+        logo.addEventListener('load', startWelcome, {once:true});
+        logo.addEventListener('error', startWelcome, {once:true});
+    }
+})();
+</script>
+
+  margin:0;
 color:#edf8ff;
 background:radial-gradient(ellipse at top,#123253,transparent 55%),#050d19;
 font:15px -apple-system,BlinkMacSystemFont,sans-serif;

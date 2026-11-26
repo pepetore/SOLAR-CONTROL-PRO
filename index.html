@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="es">
 <head>
@@ -13,7 +12,7 @@
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <link rel="preload" as="image" href="icon.png">
 
-<title>Solar Control PRO 3.2</title>
+<title>Solar Control PRO 3.3</title>
 
 <style>
 
@@ -33,8 +32,6 @@ color:#edf8ff;
 background:radial-gradient(ellipse at top,#123253,transparent 55%),#050d19;
 font:15px -apple-system,BlinkMacSystemFont,sans-serif;
 }
-
-/* PANTALLA DE BIENVENIDA */
 
 #splash-screen{
 position:fixed;
@@ -61,11 +58,7 @@ opacity:0;
 pointer-events:none;
 }
 
-body.welcome{
-overflow:hidden;
-}
-
-/* DISEÑO PRINCIPAL */
+body.welcome{overflow:hidden}
 
 main{
 max-width:650px;
@@ -130,6 +123,11 @@ padding:11px;
 }
 
 button{cursor:pointer}
+
+button:disabled{
+opacity:.45;
+cursor:default;
+}
 
 #refresh{
 font-size:26px;
@@ -242,26 +240,16 @@ animation:solarFall var(--speed,1.5s) linear infinite;
 }
 
 @keyframes solarFall{
-0%{
-transform:translateY(-48px);
-opacity:0;
-}
+0%{transform:translateY(-48px);opacity:0}
 20%,80%{opacity:1}
-100%{
-transform:translateY(0);
-opacity:0;
-}
+100%{transform:translateY(0);opacity:0}
 }
 
 .paused .solar-ray{
 animation-play-state:paused;
 }
 
-#plate{
-transition:filter 1s;
-}
-
-/* METEOROLOGÍA ANIMADA */
+#plate{transition:filter 1s}
 
 #weatherScene{
 position:relative;
@@ -444,15 +432,9 @@ color:white;
 }
 
 @keyframes precipitation{
-from{
-transform:translate(0,-10px);
-opacity:0;
-}
+from{transform:translate(0,-10px);opacity:0}
 30%{opacity:1}
-to{
-transform:translate(-12px,90px);
-opacity:0;
-}
+to{transform:translate(-12px,90px);opacity:0}
 }
 
 .fog:after{
@@ -467,16 +449,12 @@ animation:mist 5s infinite alternate;
 to{transform:translateY(30px)}
 }
 
-.storm{
-animation:lightning 7s infinite;
-}
+.storm{animation:lightning 7s infinite}
 
 @keyframes lightning{
 0%,91%,95%,100%{filter:brightness(1)}
 92%,96%{filter:brightness(1.9)}
 }
-
-/* GRÁFICOS */
 
 #chart{
 height:115px;
@@ -516,9 +494,7 @@ padding:14px 0;
 border-bottom:1px solid #25465d;
 }
 
-.solarScene{
-margin:12px -5px 0;
-}
+.solarScene{margin:12px -5px 0}
 
 .solarStatus{
 display:flex;
@@ -546,6 +522,46 @@ border-radius:6px;
 overflow:hidden;
 }
 
+/* CLOUDFLARE CLOUD SYNC */
+
+.cloudPanel{
+border:1px solid #51e5ff35;
+border-radius:15px;
+padding:13px;
+background:#071725;
+margin:12px 0;
+}
+
+.cloudStatus{
+font-size:11px;
+font-weight:650;
+letter-spacing:1px;
+color:var(--gold);
+}
+
+.cloudOnline{color:var(--green)}
+.cloudError{color:#ff7185}
+
+.primary{
+width:100%;
+color:var(--cyan);
+background:linear-gradient(135deg,#17485c,#102b40);
+border-color:#51e5ff88;
+font-weight:650;
+}
+
+.rule{
+padding:12px 0;
+border-bottom:1px solid #25465d;
+font-size:13px;
+}
+
+.rule:last-child{border:0}
+
+#cloudUpdated{
+overflow-wrap:anywhere;
+}
+
 [hidden]{display:none!important}
 
 @media(prefers-reduced-motion:reduce){
@@ -559,8 +575,6 @@ transition:none!important;
 </head>
 
 <body class="welcome">
-
-<!-- BIENVENIDA SOLAR CONTROL PRO -->
 
 <div id="splash-screen" role="status">
 <img src="icon.png" alt="SOLAR CONTROL PRO By:Pepe">
@@ -605,8 +619,6 @@ logo.addEventListener('error',startWelcome,{once:true});
 
 }
 
-// Evita bloquear la aplicación si falla la carga.
-
 setTimeout(startWelcome,5000);
 
 })();
@@ -626,7 +638,7 @@ SOLAR CONTROL <span class="cyan">PRO</span>
 
 <div class="live">
 <span class="dot"></span>
-FUTURE ENERGY 3.2
+FUTURE ENERGY 3.3
 </div>
 
 </div>
@@ -638,6 +650,16 @@ FUTURE ENERGY 3.2
 <p id="notice" role="status">
 Consultando Open-Meteo…
 </p>
+
+<div class="row">
+
+<small>CLOUD SYNC</small>
+
+<small id="headerCloud" class="cloudStatus">
+SIN CONECTAR
+</small>
+
+</div>
 
 <!-- INICIO -->
 
@@ -667,16 +689,11 @@ Consultando Open-Meteo…
 <div class="weatherInfo">
 
 <span id="weather">—</span>
-
 <strong id="temp">—</strong>
 
 </div>
-
 </div>
-
 </section>
-
-<!-- PANEL SOLAR -->
 
 <section>
 
@@ -945,7 +962,6 @@ SOLAR THERMAL SYSTEM
 <div class="solarStatus">
 
 <small id="raylabel">—</small>
-
 <small id="raycount">—</small>
 
 </div>
@@ -953,58 +969,45 @@ SOLAR THERMAL SYSTEM
 <div class="row" style="margin-top:13px">
 
 <small>MONITORIZACIÓN SOLAR</small>
-
 <button id="pause">Pausar</button>
 
 </div>
 
 </section>
 
-<!-- PREVISIÓN Y ENERGÍA -->
-
 <section>
 
 <div class="grid">
 
 <div>
-
 <small>PREVISIÓN 16:00</small>
-
 <strong id="total">—</strong>
-
 <small>kWh/m²</small>
-
 </div>
 
 <div>
-
 <small>APOYO PREVISTO</small>
-
 <strong id="on">—</strong>
-
 <small id="duration">—</small>
-
 </div>
 
 <div>
-
 <small>CONSUMO MÁX. PREVISTO</small>
-
 <strong id="energy">—</strong>
-
 </div>
 
 <div>
-
 <small>AHORRO MÁX. ESTIMADO</small>
-
 <strong id="saving">—</strong>
-
 </div>
 
 </div>
 
 <p id="countdown">—</p>
+
+<small id="forecastSource">
+Configuración pendiente de sincronizar
+</small>
 
 </section>
 
@@ -1030,7 +1033,7 @@ SOLAR THERMAL SYSTEM
 
 </div>
 
-<!-- PREVISIÓN SEMANAL -->
+<!-- PREVISIÓN -->
 
 <div id="prevision" class="page" hidden>
 
@@ -1054,33 +1057,58 @@ SOLAR THERMAL SYSTEM
 
 <h2 class="cyan">Monitorización del termo</h2>
 
-<p>Estado real Meross: pendiente de integración.</p>
+<p>Estado real Meross: pendiente de integración en esta aplicación.</p>
 
 <p>Potencia instantánea real: no disponible.</p>
 
 <div class="grid">
 
 <div>
-
 <small>POTENCIA DE REFERENCIA</small>
-
 <strong id="reference">—</strong>
-
 </div>
 
 <div>
-
 <small>HORARIO PREVISTO</small>
-
 <strong id="schedule">—</strong>
-
 </div>
 
 </div>
 
 <p>
-Aplicación de monitorización.
-No controla el enchufe.
+Aplicación de monitorización y configuración.
+No controla directamente el enchufe.
+</p>
+
+</section>
+
+<section>
+
+<h2 class="cyan">Automatización inteligente</h2>
+
+<div class="rule row">
+<span>Encendido 18:00</span>
+<strong id="rule18" style="color:var(--gold)">—</strong>
+</div>
+
+<div class="rule row">
+<span>Encendido 19:00</span>
+<strong id="rule19" class="cyan">—</strong>
+</div>
+
+<div class="rule row">
+<span>Sin apoyo eléctrico</span>
+<strong id="ruleOff" style="color:var(--green)">—</strong>
+</div>
+
+<div class="rule row">
+<span>Apagado automático</span>
+<strong>20:00</strong>
+</div>
+
+<p>
+Encendido gestionado por Make.
+Apagado gestionado por la rutina Meross.
 </p>
 
 </section>
@@ -1122,22 +1150,13 @@ Se guardan en este dispositivo.
 </p>
 
 <label>
-
 Fecha
-
 <input id="date" type="date">
-
 </label>
 
 <label>
-
 Consumo diario (kWh)
-
-<input id="reading"
-type="number"
-min="0"
-step="0.001">
-
+<input id="reading" type="number" min="0" step="0.001">
 </label>
 
 <button id="saveReading">Guardar lectura</button>
@@ -1153,6 +1172,130 @@ step="0.001">
 <!-- AJUSTES -->
 
 <div id="ajustes" class="page" hidden>
+
+<section>
+
+<h2 class="cyan">Cloudflare Cloud Sync</h2>
+
+<div class="cloudPanel">
+
+<div class="row">
+
+<small>ESTADO DE CONEXIÓN</small>
+
+<strong id="cloudStatus" class="cloudStatus">
+SIN CONECTAR
+</strong>
+
+</div>
+
+<p id="cloudUpdated">
+Pendiente de autenticación.
+</p>
+
+<div class="grid">
+
+<div>
+<small>UMBRAL INFERIOR</small>
+<strong id="cloudLow">—</strong>
+<small>kWh/m²</small>
+</div>
+
+<div>
+<small>UMBRAL SUPERIOR</small>
+<strong id="cloudHigh">—</strong>
+<small>kWh/m²</small>
+</div>
+
+</div>
+
+</div>
+
+<label>
+
+Token privado SOLAR_ACCESS
+
+<input id="token"
+type="password"
+autocomplete="off"
+autocapitalize="none"
+spellcheck="false"
+placeholder="Introduce tu token privado">
+
+</label>
+
+<div class="row">
+
+<button id="connectCloud">
+Conectar
+</button>
+
+<button id="disconnectCloud">
+Desconectar
+</button>
+
+</div>
+
+<p>
+El token se guarda únicamente en el navegador
+de este dispositivo. No se publica en GitHub.
+</p>
+
+<p id="connectionMsg" role="status"></p>
+
+</section>
+
+<section>
+
+<h2 class="cyan">Umbrales de automatización</h2>
+
+<p>
+Configuración compartida con Make.
+Los cambios afectan a las próximas ejecuciones
+automáticas del termo.
+</p>
+
+<label>
+
+Umbral inferior (kWh/m²)
+
+<input id="low"
+type="number"
+min="0"
+max="10"
+step="0.1">
+
+</label>
+
+<label>
+
+Umbral superior (kWh/m²)
+
+<input id="high"
+type="number"
+min="0"
+max="10"
+step="0.1">
+
+</label>
+
+<button id="saveCloud" class="primary" disabled>
+Guardar y sincronizar con Make
+</button>
+
+<p id="cloudMsg" role="status"></p>
+
+<button id="readCloud">
+Consultar Cloudflare
+</button>
+
+<p>
+Se recomienda modificar los umbrales antes de
+las 18:00, para que las dos automatizaciones
+utilicen la misma configuración.
+</p>
+
+</section>
 
 <section>
 
@@ -1194,35 +1337,14 @@ Perfil local
 
 </label>
 
-<label>
-
-Umbral inferior (kWh/m²)
-
-<input id="low"
-type="number"
-min="0"
-step="0.1">
-
-</label>
-
-<label>
-
-Umbral superior (kWh/m²)
-
-<input id="high"
-type="number"
-min="0"
-step="0.1">
-
-</label>
-
-<button id="save">Guardar ajustes</button>
+<button id="save">Guardar ajustes locales</button>
 
 <p id="settingsMsg"></p>
 
 <p>
-Los ajustes solo modifican la previsión local.
-No modifican Make ni Meross.
+La potencia, la tarifa y el perfil se guardan
+en este dispositivo. Ambos perfiles utilizan
+los mismos umbrales compartidos con Make.
 </p>
 
 </section>
@@ -1288,12 +1410,14 @@ La cuenta atrás funciona con la app abierta.
 
 <small>SOLAR CONTROL PRO</small>
 
-<h2 class="cyan">Versión 3.2</h2>
+<h2 class="cyan">Versión 3.3</h2>
 
 <p>
-Future Energy Edition.
-Termo solar vectorial en perspectiva 3D.
-Pantalla de bienvenida animada.
+Future Energy · Cloud Sync Edition.<br>
+Termo solar vectorial en perspectiva 3D.<br>
+Pantalla de bienvenida animada.<br>
+Configuración compartida con Make.<br>
+By:Pepe
 </p>
 
 </section>
@@ -1370,13 +1494,19 @@ const $=id=>document.getElementById(id);
 
 const ns='http://www.w3.org/2000/svg';
 
+const CLOUD_URL=
+'https://solar-control-pro.pepetore7.workers.dev/solar-config';
+
+const TOKEN_KEY='solar-cloud-token-v1';
+const CACHE_KEY='solar-cloud-config-v1';
+
 const fmt=(n,d=2)=>
 Number(n).toLocaleString('es-ES',{
 minimumFractionDigits:d,
 maximumFractionDigits:d
 });
 
-// CONFIGURACIÓN
+// CONFIGURACIÓN LOCAL
 
 const defaults={
 
@@ -1384,15 +1514,8 @@ power:1584.57,
 price:null,
 season:'winter',
 
-winter:{
-low:2.5,
-high:3
-},
-
-summer:{
-low:2.5,
-high:3
-}
+winter:{low:2.5,high:3},
+summer:{low:2.5,high:3}
 
 };
 
@@ -1427,10 +1550,504 @@ summer:{
 
 let readings=load('solar-readings-v2',{});
 
+let cloudConfig=load(CACHE_KEY,{
+low:2.5,
+high:3,
+updatedAt:null
+});
+
+let cloudToken='';
+
+try{
+cloudToken=localStorage.getItem(TOKEN_KEY)||'';
+}catch{}
+
 let data=null;
 let paused=false;
 let busy=false;
 let lastRad=null;
+
+let cloudBusy=false;
+let cloudVerified=false;
+let cloudDirty=false;
+let cloudEpoch=0;
+
+// CLOUDFLARE
+
+function validThresholds(lo,hi){
+
+return Number.isFinite(lo)&&
+Number.isFinite(hi)&&
+lo>=0&&
+hi>=lo&&
+hi<=10;
+
+}
+
+if(!validThresholds(cloudConfig.low,cloudConfig.high)){
+
+cloudConfig={
+low:2.5,
+high:3,
+updatedAt:null
+};
+
+}
+
+function cloudState(message,type){
+
+['cloudStatus','headerCloud'].forEach(id=>{
+
+$(id).textContent=message;
+
+$(id).className='cloudStatus '+(
+type==='online'?'cloudOnline':
+type==='error'?'cloudError':''
+);
+
+});
+
+}
+
+function cloudControls(){
+
+$('saveCloud').disabled=
+cloudBusy||!cloudVerified||!cloudToken;
+
+$('readCloud').disabled=cloudBusy;
+$('connectCloud').disabled=cloudBusy;
+$('disconnectCloud').disabled=cloudBusy;
+
+$('low').disabled=cloudBusy;
+$('high').disabled=cloudBusy;
+
+}
+
+function cloudFields(force=false){
+
+if(force||!cloudDirty){
+
+$('low').value=cloudConfig.low;
+$('high').value=cloudConfig.high;
+
+}
+
+$('cloudLow').textContent=fmt(cloudConfig.low,1);
+$('cloudHigh').textContent=fmt(cloudConfig.high,1);
+
+$('rule18').textContent=
+'< '+fmt(cloudConfig.low,1)+' kWh/m²';
+
+$('rule19').textContent=
+fmt(cloudConfig.low,1)+' a < '+
+fmt(cloudConfig.high,1);
+
+$('ruleOff').textContent=
+'≥ '+fmt(cloudConfig.high,1)+' kWh/m²';
+
+$('forecastSource').textContent=
+(cloudVerified?'CLOUD SYNC':'VALORES NO VERIFICADOS')+
+' · '+fmt(cloudConfig.low,1)+
+' / '+fmt(cloudConfig.high,1)+' kWh/m²';
+
+$('cloudUpdated').textContent=
+cloudConfig.updatedAt
+?'Último cambio registrado: '+
+new Date(cloudConfig.updatedAt)
+.toLocaleString('es-ES',{
+timeZone:'Europe/Madrid'
+})
+:'Sin fecha de actualización registrada.';
+
+cloudControls();
+
+}
+
+async function cloudRequest(method='GET',body=null){
+
+if(!cloudToken){
+throw new Error('Introduce el token privado.');
+}
+
+const controller=new AbortController();
+
+const timer=setTimeout(
+()=>controller.abort(),
+15000
+);
+
+try{
+
+const options={
+
+method,
+
+headers:{
+'Authorization':'Bearer '+cloudToken
+},
+
+cache:'no-store',
+signal:controller.signal
+
+};
+
+if(body!==null){
+
+options.headers['Content-Type']='application/json';
+options.body=JSON.stringify(body);
+
+}
+
+const response=await fetch(
+CLOUD_URL,
+options
+);
+
+let result;
+
+try{
+result=await response.json();
+}catch{
+throw new Error('Respuesta de Cloudflare no válida.');
+}
+
+if(response.status===401){
+throw new Error('Token incorrecto o no autorizado.');
+}
+
+if(!response.ok){
+
+throw new Error(
+result.error||'Error HTTP '+response.status
+);
+
+}
+
+return result;
+
+}finally{
+
+clearTimeout(timer);
+
+}
+
+}
+
+function acceptCloud(result,force=false){
+
+const config=result.config||{};
+
+const lo=config.UMBRAL_INFERIOR;
+const hi=config.UMBRAL_SUPERIOR;
+
+if(!validThresholds(lo,hi)){
+
+throw new Error(
+'Cloudflare ha devuelto umbrales no válidos.'
+);
+
+}
+
+cloudConfig={
+
+low:lo,
+high:hi,
+updatedAt:result.updatedAt||null
+
+};
+
+try{
+
+localStorage.setItem(
+CACHE_KEY,
+JSON.stringify(cloudConfig)
+);
+
+}catch{}
+
+cloudVerified=true;
+
+cloudState('● ONLINE','online');
+
+if(force)cloudDirty=false;
+
+cloudFields(force);
+
+render();
+
+}
+
+async function syncCloud(manual=false){
+
+if(cloudBusy)return false;
+
+if(!cloudToken){
+
+cloudVerified=false;
+
+cloudState('SIN CONECTAR','error');
+
+cloudFields();
+
+if(manual){
+
+$('connectionMsg').textContent=
+'Introduce primero tu token privado.';
+
+}
+
+return false;
+
+}
+
+cloudBusy=true;
+
+const epoch=cloudEpoch;
+
+cloudState('SINCRONIZANDO…','pending');
+
+cloudControls();
+
+try{
+
+const result=await cloudRequest('GET');
+
+if(epoch!==cloudEpoch)return false;
+
+acceptCloud(result,manual);
+
+if(manual){
+
+$('connectionMsg').textContent=
+'Autenticación y lectura correctas.';
+
+$('cloudMsg').textContent=
+'Configuración consultada correctamente.';
+
+}
+
+return true;
+
+}catch(error){
+
+if(epoch!==cloudEpoch)return false;
+
+cloudVerified=false;
+
+cloudState('SIN CONEXIÓN','error');
+
+$('connectionMsg').textContent=
+error.message+
+' Se conservan los últimos valores disponibles.';
+
+cloudFields();
+
+return false;
+
+}finally{
+
+cloudBusy=false;
+
+cloudControls();
+
+}
+
+}
+
+$('low').oninput=()=>{
+cloudDirty=true;
+};
+
+$('high').oninput=()=>{
+cloudDirty=true;
+};
+
+$('connectCloud').onclick=async()=>{
+
+if(cloudBusy)return;
+
+const value=$('token').value.trim();
+
+if(!value){
+
+$('connectionMsg').textContent=
+'Introduce tu token SOLAR_ACCESS.';
+
+return;
+
+}
+
+cloudToken=value;
+cloudVerified=false;
+cloudEpoch++;
+
+try{
+localStorage.removeItem(TOKEN_KEY);
+}catch{}
+
+$('token').value='';
+
+const ok=await syncCloud(true);
+
+if(ok){
+
+try{
+
+localStorage.setItem(
+TOKEN_KEY,
+cloudToken
+);
+
+$('connectionMsg').textContent=
+'Conexión correcta. Token guardado en este dispositivo.';
+
+}catch{
+
+$('connectionMsg').textContent=
+'Conexión correcta. No se pudo guardar el token.';
+
+}
+
+}
+
+};
+
+$('disconnectCloud').onclick=()=>{
+
+if(cloudBusy)return;
+
+cloudEpoch++;
+cloudToken='';
+cloudVerified=false;
+
+try{
+localStorage.removeItem(TOKEN_KEY);
+}catch{}
+
+$('token').value='';
+
+cloudState('DESCONECTADO','error');
+
+$('connectionMsg').textContent=
+'Token eliminado de este dispositivo.';
+
+cloudFields();
+
+};
+
+$('readCloud').onclick=()=>{
+
+if(cloudDirty&&
+!confirm('¿Descartar los cambios sin guardar?')){
+
+return;
+
+}
+
+syncCloud(true);
+
+};
+
+$('saveCloud').onclick=async()=>{
+
+if(cloudBusy||!cloudVerified||!cloudToken)return;
+
+const lo=Number($('low').value);
+const hi=Number($('high').value);
+
+if(
+$('low').value===''||
+$('high').value===''||
+!validThresholds(lo,hi)
+){
+
+$('cloudMsg').textContent=
+'Revisa los umbrales. Deben estar entre 0 y 10 y el inferior no puede superar al superior.';
+
+return;
+
+}
+
+const t=local();
+
+if(Number(t.hour)>=18&&Number(t.hour)<20){
+
+if(!confirm(
+'Estás dentro del horario de automatización. Cambiar los umbrales ahora puede afectar a la ejecución de hoy. ¿Continuar?'
+))return;
+
+}
+
+if(!confirm(
+'¿Guardar estos umbrales en Cloudflare para Make?\n\n'+
+'Inferior: '+fmt(lo,1)+' kWh/m²\n'+
+'Superior: '+fmt(hi,1)+' kWh/m²'
+))return;
+
+cloudBusy=true;
+
+cloudControls();
+
+cloudState('GUARDANDO…','pending');
+
+$('cloudMsg').textContent=
+'Guardando configuración en Cloudflare…';
+
+try{
+
+const result=await cloudRequest('POST',{
+
+UMBRAL_INFERIOR:lo,
+UMBRAL_SUPERIOR:hi
+
+});
+
+if(result.saved!==true){
+
+throw new Error(
+'Cloudflare no ha confirmado el guardado.'
+);
+
+}
+
+if(
+result.config?.UMBRAL_INFERIOR!==lo||
+result.config?.UMBRAL_SUPERIOR!==hi
+){
+
+throw new Error(
+'Los valores devueltos no coinciden.'
+);
+
+}
+
+acceptCloud(result,true);
+
+$('cloudMsg').textContent=
+'✓ Guardado confirmado por Cloudflare. Make utilizará los nuevos valores cuando estén propagados en KV.';
+
+}catch(error){
+
+cloudVerified=false;
+
+cloudState('REVISAR CONEXIÓN','error');
+
+$('cloudMsg').textContent=
+'No se pudo confirmar el guardado: '+
+error.message+
+' Consulta Cloudflare antes de volver a guardar.';
+
+cloudFields();
+
+}finally{
+
+cloudBusy=false;
+
+cloudControls();
+
+}
+
+};
 
 // ESTADOS METEOROLÓGICOS
 
@@ -1513,11 +2130,9 @@ return t.year+'-'+t.month+'-'+t.day
 
 function mins(v){
 
-let s=settings[settings.season];
-
-return v<s.low
+return v<cloudConfig.low
 ?120
-:v<s.high
+:v<cloudConfig.high
 ?60
 :0
 
@@ -1554,7 +2169,6 @@ function buildGauge(){
 const point=a=>[
 
 83+59*Math.cos(a*Math.PI/180),
-
 111+59*Math.sin(a*Math.PI/180)
 
 ];
@@ -1573,23 +2187,17 @@ $('arcs').replaceChildren();
 colors.forEach((c,i)=>{
 
 let a=point(150+i*60);
-
 let b=point(210+i*60);
 
 let p=document.createElementNS(ns,'path');
 
 p.setAttribute(
-
 'd',
-
 `M${a.join(' ')} A59 59 0 0 1 ${b.join(' ')}`
-
 );
 
 p.setAttribute('stroke',c);
-
 p.setAttribute('stroke-width','9');
-
 p.setAttribute('fill','none');
 
 $('arcs').append(p)
@@ -1611,7 +2219,6 @@ let demo=$('demo').checked;
 $('rad').textContent=rad;
 
 $('needle').style.transform=
-
 `rotate(${-120+normalized/5}deg)`;
 
 let n=Math.min(12,Math.ceil(rad/100));
@@ -1629,23 +2236,17 @@ $('raylabel').textContent=
 :'RADIACIÓN ALTA');
 
 $('raycount').textContent=
-
 n+' FLECHAS ACTIVAS';
 
 $('plate').style.filter=
 
 rad===0
-
 ?'none'
-
 :`drop-shadow(0 0 ${normalized/180}px #ffbc45)`;
 
 $('heatOverlay').setAttribute(
-
 'opacity',
-
 normalized/1200*.18
-
 );
 
 if(lastRad===rad)return;
@@ -1661,19 +2262,14 @@ let t=(i+.5)/n;
 let x=194+t*126;
 
 let y=x<260
-
 ?164+(x-194)*.29
-
 :177-(x-260)*1.2;
 
 let p=document.createElementNS(ns,'path');
 
 p.setAttribute(
-
 'd',
-
 `M${x} ${y-25}v25m-4 -6 4 6 4 -6`
-
 );
 
 p.setAttribute('class','solar-ray');
@@ -1681,11 +2277,8 @@ p.setAttribute('class','solar-ray');
 p.style.animationDelay=(-i*.23)+'s';
 
 p.style.setProperty(
-
 '--speed',
-
 Math.max(.65,2.5-normalized/650)+'s'
-
 );
 
 $('rays').append(p)
@@ -1726,17 +2319,13 @@ function render(){
 if(!data)return;
 
 let a=data.current;
-
 let h=data.hourly;
-
 let day=today();
-
 let vals=daily(day);
 
 if(!vals.length)return;
 
 let v=sum(vals);
-
 let m=mins(v);
 
 let k=settings.power/1000*m/60;
@@ -1749,18 +2338,12 @@ let w=weather[a.weather_code]||['Desconocido','❔'];
 
 let code=a.weather_code;
 
-// METEOROLOGÍA
-
 let kind=
 
 code===0?'clear':
-
 code<=2?'cloudy':
-
 code===3?'overcast':
-
 code<=48?'fog':
-
 code>=95?'storm':
 
 (
@@ -1771,32 +2354,22 @@ code>=85&&code<=86
 ?'snow':'rain';
 
 $('weatherScene').className=
-
 kind+(a.is_day?'':' night');
 
 $('weatherScene')
-
 .querySelectorAll('.particle')
-
 .forEach(p=>
-
 p.textContent=kind==='snow'?'❄':'│'
-
 );
 
 $('weather').textContent=
 
 a.is_day===0&&code===0
-
 ?'Noche despejada'
-
 :w[0];
 
 $('temp').textContent=
-
 fmt(a.temperature_2m,0)+'°C';
-
-// TERMO Y VELOCÍMETRO
 
 rays(
 
@@ -1812,24 +2385,17 @@ $('demo').checked
 
 );
 
-// PREVISIÓN
-
 $('total').textContent=fmt(v);
 
 let color=m===120
-
 ?'#ffc05b'
-
 :m===60
-
 ?'#51e5ff'
-
 :'#38e7a1';
 
 $('total').style.color=color;
 
 $('on').textContent=
-
 m?hours(m).slice(0,5):'OFF';
 
 $('on').style.color=color;
@@ -1841,7 +2407,6 @@ $('energy').textContent=fmt(k)+' kWh';
 $('saving').textContent=cost(avoided);
 
 $('reference').textContent=
-
 fmt(settings.power)+' W';
 
 $('schedule').textContent=hours(m);
@@ -1849,21 +2414,13 @@ $('schedule').textContent=hours(m);
 $('balance').textContent=
 
 'Consumo máximo: '+
-
 fmt(k)+' kWh · Coste: '+
-
 cost(k)+
-
 ' · Energía evitada frente a 2 h: '+
-
 fmt(avoided)+' kWh'+
-
 ' · Tiempo evitado: '+
-
 (120-m)+' min'+
-
 ' · Ahorro máximo: '+
-
 cost(avoided);
 
 $('acc').textContent=
@@ -1886,11 +2443,8 @@ v:h.shortwave_radiation[i]
 $('chart').replaceChildren();
 
 let max=Math.max(
-
 100,
-
 ...dayHours.map(o=>o.v)
-
 );
 
 dayHours.forEach(o=>{
@@ -1900,7 +2454,6 @@ let b=document.createElement('div');
 b.className='bar '+(
 
 Number(o.t.slice(11,13))>
-
 Number(now.hour)
 
 ?'future'
@@ -1909,11 +2462,9 @@ Number(now.hour)
 );
 
 b.style.height=
-
 Math.max(2,o.v/max*100)+'%';
 
 b.title=
-
 o.t.slice(11)+' · '+o.v+' W/m²';
 
 $('chart').append(b)
@@ -1931,7 +2482,6 @@ let vv=daily(d);
 if(!vv.length)return;
 
 let r=sum(vv);
-
 let mm=mins(r);
 
 let ww=weather[data.daily.weather_code[i]]||['',''];
@@ -1941,9 +2491,7 @@ let e=document.createElement('div');
 e.className='day';
 
 let dateLabel=new Date(
-
 d+'T12:00:00'
-
 ).toLocaleDateString('es-ES',{
 
 weekday:'long',
@@ -1967,7 +2515,6 @@ value.textContent=fmt(r)+' kWh/m²';
 value.style.color=
 
 mm===120?'#ffc05b':
-
 mm===60?'#51e5ff':'#38e7a1';
 
 top.append(name,value);
@@ -1975,7 +2522,6 @@ top.append(name,value);
 let description=document.createElement('p');
 
 description.textContent=
-
 ww[0]+' · '+hours(mm);
 
 let track=document.createElement('div');
@@ -2015,7 +2561,6 @@ let vals=daily(today());
 if(!vals.length){
 
 $('countdown').textContent=
-
 'Esperando previsión del nuevo día';
 
 return
@@ -2029,9 +2574,7 @@ let m=mins(sum(vals));
 let s=
 
 Number(t.hour)*3600+
-
 Number(t.minute)*60+
-
 Number(t.second);
 
 let start=(m===120?18:19)*3600;
@@ -2059,15 +2602,11 @@ $('countdown').textContent=
 +[
 
 Math.floor(left/3600),
-
 Math.floor(left/60)%60,
-
 left%60
 
 ].map(n=>
-
 String(n).padStart(2,'0')
-
 ).join(':')
 
 }
@@ -2081,6 +2620,13 @@ if(busy)return;
 busy=true;
 
 $('refresh').disabled=true;
+
+const controller=new AbortController();
+
+const timer=setTimeout(
+()=>controller.abort(),
+15000
+);
 
 try{
 
@@ -2102,7 +2648,10 @@ let r=await fetch(
 
 '&forecast_days=7',
 
-{cache:'no-store'}
+{
+cache:'no-store',
+signal:controller.signal
+}
 
 );
 
@@ -2113,9 +2662,7 @@ let d=await r.json();
 if(
 
 !d.current||
-
 !d.daily||
-
 !d.hourly||
 
 !Number.isFinite(d.current.shortwave_radiation)||
@@ -2123,9 +2670,7 @@ if(
 !Number.isFinite(d.current.temperature_2m)||
 
 d.hourly.shortwave_radiation.some(
-
 v=>!Number.isFinite(v)
-
 )
 
 )throw Error();
@@ -2150,6 +2695,8 @@ $('notice').textContent=
 
 }finally{
 
+clearTimeout(timer);
+
 busy=false;
 
 $('refresh').disabled=false
@@ -2158,7 +2705,19 @@ $('refresh').disabled=false
 
 }
 
-// AJUSTES
+async function refreshAll(){
+
+await Promise.allSettled([
+
+refresh(),
+
+syncCloud(false)
+
+]);
+
+}
+
+// AJUSTES LOCALES
 
 function fields(){
 
@@ -2168,21 +2727,9 @@ $('price').value=settings.price??'';
 
 $('season').value=settings.season;
 
-$('low').value=settings[settings.season].low;
-
-$('high').value=settings[settings.season].high
+cloudFields(true);
 
 }
-
-$('season').onchange=()=>{
-
-let s=settings[$('season').value];
-
-$('low').value=s.low;
-
-$('high').value=s.high
-
-};
 
 $('save').onclick=()=>{
 
@@ -2194,19 +2741,11 @@ let price=$('price').value===''
 
 :Number($('price').value);
 
-let lo=Number($('low').value);
-
-let hi=Number($('high').value);
-
 let season=$('season').value;
 
 if(!(
 
 Number.isFinite(p)&&p>0&&
-
-Number.isFinite(lo)&&lo>=0&&
-
-Number.isFinite(hi)&&hi>lo&&
 
 (price===null||
 
@@ -2215,8 +2754,7 @@ Number.isFinite(price)&&price>=0)
 )){
 
 $('settingsMsg').textContent=
-
-'Revisa potencia, tarifa y umbrales.';
+'Revisa potencia y tarifa.';
 
 return
 
@@ -2225,34 +2763,20 @@ return
 settings={
 
 ...settings,
-
 power:p,
-
 price,
-
-season,
-
-[season]:{
-
-low:lo,
-
-high:hi
-
-}
+season
 
 };
 
 localStorage.setItem(
-
 'solar-settings-v2',
-
 JSON.stringify(settings)
-
 );
 
 $('settingsMsg').textContent=
 
-'Guardado. Make no se ha modificado.';
+'Ajustes locales guardados. Los umbrales de Make no se han modificado.';
 
 render();
 
@@ -2267,7 +2791,6 @@ function renderHistory(){
 let d=today();
 
 let entries=
-
 Object.entries(readings).sort().reverse();
 
 let month=entries.filter(
@@ -2381,7 +2904,6 @@ JSON.stringify(readings)
 );
 
 $('readingMsg').textContent=
-
 'Lectura guardada.';
 
 renderHistory()
@@ -2410,7 +2932,7 @@ x.classList.toggle('active',x===b)
 
 );
 
-window.scrollTo(0,0)
+window.scrollTo(0,0);
 
 });
 
@@ -2482,7 +3004,7 @@ $('demoSun').onclick=()=>demoPreset(1200);
 
 buildGauge();
 
-$('refresh').onclick=refresh;
+$('refresh').onclick=refreshAll;
 
 fields();
 
@@ -2490,9 +3012,9 @@ $('date').value=today();
 
 renderHistory();
 
-refresh();
+refreshAll();
 
-setInterval(refresh,600000);
+setInterval(refreshAll,600000);
 
 setInterval(tick,1000);
 
@@ -2502,7 +3024,7 @@ document.addEventListener(
 
 ()=>{
 
-if(!document.hidden)refresh()
+if(!document.hidden)refreshAll()
 
 }
 

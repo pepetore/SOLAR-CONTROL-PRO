@@ -11,8 +11,9 @@
 
 <link rel="icon" type="image/png" href="icon.png">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="preload" as="image" href="icon.png">
 
-<title>Solar Control PRO 3.1</title>
+<title>Solar Control PRO 3.2</title>
 
 <style>
 
@@ -27,73 +28,44 @@ color-scheme:dark;
 }
 
 body{
-
-<style>
-#splash-screen {
-    position: fixed;
-    inset: 0;
-    z-index: 99999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: radial-gradient(
-        ellipse at center,
-        #142d43,
-        #050d19 75%
-    );
-    opacity: 1;
-    transition: opacity 0.8s ease;
-}
-
-#splash-screen img {
-    width: 75%;
-    max-width: 340px;
-    height: auto;
-    border-radius: 22%;
-    box-shadow: 0 0 45px #35cfff40;
-}
-
-#splash-screen.fade-out {
-    opacity: 0;
-    pointer-events: none;
-}
-</style>
-
-<div id="splash-screen">
-    <img src="icon.png"
-         alt="SOLAR CONTROL PRO By:Pepe">
-</div>
-
-<script>
-(function () {
-    const splash = document.getElementById('splash-screen');
-    const logo = splash.querySelector('img');
-
-    function startWelcome() {
-        setTimeout(function () {
-            splash.classList.add('fade-out');
-
-            setTimeout(function () {
-                splash.remove();
-            }, 800);
-
-        }, 3000);
-    }
-
-    if (logo.complete) {
-        startWelcome();
-    } else {
-        logo.addEventListener('load', startWelcome, {once:true});
-        logo.addEventListener('error', startWelcome, {once:true});
-    }
-})();
-</script>
-
-  margin:0;
+margin:0;
 color:#edf8ff;
 background:radial-gradient(ellipse at top,#123253,transparent 55%),#050d19;
 font:15px -apple-system,BlinkMacSystemFont,sans-serif;
 }
+
+/* PANTALLA DE BIENVENIDA */
+
+#splash-screen{
+position:fixed;
+inset:0;
+z-index:99999;
+display:flex;
+align-items:center;
+justify-content:center;
+background:radial-gradient(ellipse at center,#142d43,#050d19 75%);
+opacity:1;
+transition:opacity .8s ease;
+}
+
+#splash-screen img{
+width:75%;
+max-width:340px;
+height:auto;
+border-radius:22%;
+box-shadow:0 0 45px #35cfff40;
+}
+
+#splash-screen.fade-out{
+opacity:0;
+pointer-events:none;
+}
+
+body.welcome{
+overflow:hidden;
+}
+
+/* DISEÑO PRINCIPAL */
 
 main{
 max-width:650px;
@@ -288,6 +260,8 @@ animation-play-state:paused;
 #plate{
 transition:filter 1s;
 }
+
+/* METEOROLOGÍA ANIMADA */
 
 #weatherScene{
 position:relative;
@@ -502,6 +476,8 @@ animation:lightning 7s infinite;
 92%,96%{filter:brightness(1.9)}
 }
 
+/* GRÁFICOS */
+
 #chart{
 height:115px;
 display:flex;
@@ -582,7 +558,59 @@ transition:none!important;
 </style>
 </head>
 
-<body>
+<body class="welcome">
+
+<!-- BIENVENIDA SOLAR CONTROL PRO -->
+
+<div id="splash-screen" role="status">
+<img src="icon.png" alt="SOLAR CONTROL PRO By:Pepe">
+</div>
+
+<script>
+(function(){
+
+const splash=document.getElementById('splash-screen');
+const logo=splash.querySelector('img');
+
+let started=false;
+
+function startWelcome(){
+
+if(started)return;
+started=true;
+
+setTimeout(function(){
+
+splash.classList.add('fade-out');
+
+setTimeout(function(){
+
+splash.remove();
+document.body.classList.remove('welcome');
+
+},800);
+
+},3000);
+
+}
+
+if(logo.complete){
+
+startWelcome();
+
+}else{
+
+logo.addEventListener('load',startWelcome,{once:true});
+logo.addEventListener('error',startWelcome,{once:true});
+
+}
+
+// Evita bloquear la aplicación si falla la carga.
+
+setTimeout(startWelcome,5000);
+
+})();
+</script>
 
 <main>
 
@@ -598,7 +626,7 @@ SOLAR CONTROL <span class="cyan">PRO</span>
 
 <div class="live">
 <span class="dot"></span>
-FUTURE ENERGY 3.1
+FUTURE ENERGY 3.2
 </div>
 
 </div>
@@ -648,7 +676,7 @@ Consultando Open-Meteo…
 
 </section>
 
-<!-- PANEL SOLAR 3.1 -->
+<!-- PANEL SOLAR -->
 
 <section>
 
@@ -1260,12 +1288,12 @@ La cuenta atrás funciona con la app abierta.
 
 <small>SOLAR CONTROL PRO</small>
 
-<h2 class="cyan">Versión 3.1</h2>
+<h2 class="cyan">Versión 3.2</h2>
 
 <p>
 Future Energy Edition.
 Termo solar vectorial en perspectiva 3D.
-Sin imágenes externas.
+Pantalla de bienvenida animada.
 </p>
 
 </section>
